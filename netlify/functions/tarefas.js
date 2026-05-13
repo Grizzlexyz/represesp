@@ -6,11 +6,11 @@ exports.handler = async (event) => {
             event.queryStringParameters.authToken;
 
         const nick =
-            event.queryStringParameters.nick;
+            event.queryStringParameters.nick || "";
 
         const rooms =
             JSON.parse(
-                event.queryStringParameters.rooms
+                event.queryStringParameters.rooms || "[]"
             );
 
         const expired =
@@ -22,13 +22,23 @@ exports.handler = async (event) => {
 
             /* ROOM */
 
-            publicationTargets.push(room.name);
+            if(room.name){
+
+                publicationTargets.push(
+                    room.name
+                );
+
+            }
 
             /* ROOM:NICK */
 
-            publicationTargets.push(
-                `${room.name}:${nick}`
-            );
+            if(room.name && nick){
+
+                publicationTargets.push(
+                    `${room.name}:${nick}`
+                );
+
+            }
 
             /* GROUP CATEGORIES */
 
@@ -36,9 +46,13 @@ exports.handler = async (event) => {
 
                 room.group_categories.forEach(group => {
 
-                    publicationTargets.push(
-                        group.id
-                    );
+                    if(group.id){
+
+                        publicationTargets.push(
+                            group.id
+                        );
+
+                    }
 
                 });
 
@@ -116,7 +130,37 @@ exports.handler = async (event) => {
             }
         );
 
-        const data = await response.json();
+        const responseText =
+            await response.text();
+
+        console.log(
+            "Resposta API:",
+            responseText
+        );
+
+        let data;
+
+        try{
+
+            data = JSON.parse(
+                responseText
+            );
+
+        }catch(parseError){
+
+            return{
+                statusCode:500,
+                headers:{
+                    "Content-Type":"application/json",
+                    "Access-Control-Allow-Origin":"*"
+                },
+                body:JSON.stringify({
+                    error:"API retornou HTML ao invés de JSON",
+                    response:responseText
+                })
+            };
+
+        }
 
         return{
             statusCode:200,
@@ -131,6 +175,10 @@ exports.handler = async (event) => {
 
         return{
             statusCode:500,
+            headers:{
+                "Content-Type":"application/json",
+                "Access-Control-Allow-Origin":"*"
+            },
             body:JSON.stringify({
                 error:error.message
             })

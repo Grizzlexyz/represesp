@@ -452,7 +452,6 @@ const escolaInfo = document.getElementById("escola-info");
 
 /* API */
 
-const API_KEY = "d701a2043aa24d7ebb37e9adf60d043b";
 if(!token || !codigoAluno){
 
     alert("Login não encontrado.");
@@ -470,13 +469,11 @@ async function carregarDadosAluno(){
         /* BUSCAR TURMA */
 
         const responseTurma = await fetch(
-            `https://sedintegracoes.educacao.sp.gov.br/saladofuturobffapi/apihubintegracoes/api/v2/Turma/ListarTurmasPorAluno?codigoAluno=${codigoAluno}`,
-            {
+    `/.netlify/functions/turma?codigoAluno=${codigoAluno}`,            {
                 method:"GET",
                 headers:{
                     "Accept":"application/json, text/plain, */*",
                     "Authorization":`Bearer ${token}`,
-                    "Ocp-Apim-Subscription-Key":API_KEY
                 }
             }
         );

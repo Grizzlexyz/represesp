@@ -590,72 +590,83 @@ if(confirmar){
 
 /* MODAL ESTATÍSTICAS */
 
-async function verificarDesempenho(ra, senha){
+async function verificarDesempenho(index){
 
-try{  
+    try{
 
-    document.getElementById("pendencias").textContent = "...";  
-    document.getElementById("expiradas").textContent = "...";  
+        document.getElementById("pendencias").textContent = "...";
 
-    document.getElementById("statsModal")  
-        .classList.add("active");  
+        document.getElementById("expiradas").textContent = "...";
 
-    /* BUSCAR DADOS DAS TAREFAS */  
+        document
+            .getElementById("statsModal")
+            .classList.add("active");
 
-    const nick = localStorage.getItem("nick");
-const rooms = localStorage.getItem("rooms");
+        const aluno = alunos[index];
 
-const params = new URLSearchParams({
-    authToken: token,
-    nick: nick,
-    rooms: rooms,
-    expired: "false"
-});
+        const params = new URLSearchParams({
 
-const response = await fetch(
-    `/.netlify/functions/tarefas?${params.toString()}`,
-    {
-        method:"GET"
+            authToken: aluno.token,
+
+            nick: aluno.nick,
+
+            rooms: JSON.stringify(
+                aluno.rooms
+            ),
+
+            expired: "false"
+
+        });
+
+        const response = await fetch(
+            `/.netlify/functions/tarefas?${params.toString()}`,
+            {
+                method:"GET"
+            }
+        );
+
+        const data = await response.json();
+
+        console.log(data);
+
+        const tarefas =
+            Array.isArray(data)
+            ? data
+            : [];
+
+        const pendentes =
+            tarefas.filter(t =>
+                !t.expired
+            ).length;
+
+        const expiradas =
+            tarefas.filter(t =>
+                t.expired
+            ).length;
+
+        document
+            .getElementById("pendencias")
+            .textContent = pendentes;
+
+        document
+            .getElementById("expiradas")
+            .textContent = expiradas;
+
+    }catch(error){
+
+        console.error(error);
+
+        document
+            .getElementById("pendencias")
+            .textContent = "Erro";
+
+        document
+            .getElementById("expiradas")
+            .textContent = "Erro";
+
     }
-);  
 
-    const data = await response.json();  
-
-    console.log("Tarefas:", data);  
-
-    /* CONTAGEM */  
-
-    const pendentes =  
-        Array.isArray(data.pendentes)  
-        ? data.pendentes.length  
-        : 0;  
-
-    const expiradas =  
-        Array.isArray(data.expiradas)  
-        ? data.expiradas.length  
-        : 0;  
-
-    /* ATUALIZAR MODAL */  
-
-    document.getElementById("pendencias")  
-        .textContent = pendentes;  
-
-    document.getElementById("expiradas")  
-        .textContent = expiradas;  
-
-}catch(error){  
-
-    console.error(error);  
-
-    document.getElementById("pendencias")  
-        .textContent = "Erro";  
-
-    document.getElementById("expiradas")  
-        .textContent = "Erro";  
-
-}
-
-}
+  }
 
 /* FECHAR MODAL */
 

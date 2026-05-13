@@ -1,16 +1,5 @@
 exports.handler = async (event) => {
 
-    if(event.httpMethod !== "POST"){
-
-        return {
-            statusCode:405,
-            body:JSON.stringify({
-                error:"Método não permitido"
-            })
-        };
-
-    }
-
     try{
 
         const body = JSON.parse(event.body);
@@ -31,8 +20,11 @@ exports.handler = async (event) => {
         const data = await response.json();
 
         return {
-            statusCode:response.status,
-            body:JSON.stringify(data)
+            statusCode: response.status,
+            headers:{
+                "Content-Type":"application/json"
+            },
+            body: JSON.stringify(data)
         };
 
     }catch(error){

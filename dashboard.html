@@ -167,6 +167,88 @@ tbody tr:hover{
     margin-bottom:20px;  
     font-size:22px;  
 }  
+  .modal-subtitle{
+    font-size:14px;
+    color:var(--text-muted);
+    margin-bottom:24px;
+    line-height:1.5;
+}
+
+.form-group{
+    margin-bottom:18px;
+}
+
+.form-group label{
+    display:block;
+    margin-bottom:8px;
+    font-size:14px;
+    font-weight:600;
+    color:var(--text);
+}
+
+.form-input{
+    width:100%;
+    height:55px;
+    border:2px solid #e5e5e5;
+    border-radius:16px;
+    padding:0 18px;
+    font-size:16px;
+    outline:none;
+    transition:0.3s;
+    background:#fff;
+    color:#111;
+}
+
+.form-input:focus{
+    border-color:var(--primary);
+}
+
+.form-row{
+    display:flex;
+    gap:10px;
+}
+
+.form-row .form-input{
+    flex:1;
+}
+
+.form-select{
+    width:90px;
+    height:55px;
+    border:2px solid #e5e5e5;
+    border-radius:16px;
+    padding:0 10px;
+    font-size:16px;
+    outline:none;
+    background:#fff;
+    color:#111;
+}
+
+.password-wrapper{
+    position:relative;
+}
+
+.toggle-password{
+    position:absolute;
+    right:18px;
+    top:50%;
+    transform:translateY(-50%);
+    background:none;
+    border:none;
+    cursor:pointer;
+    font-size:14px;
+    color:var(--primary);
+    font-weight:bold;
+}
+
+.modal-btn{
+    width:100%;
+    height:55px;
+    border:none;
+    border-radius:18px;
+    font-size:16px;
+    font-weight:bold;
+  }
   
 .stats-box{  
     width:100%;  
@@ -361,85 +443,112 @@ Carregando turma...
 
 </div>
 
-</div>  <!-- MODAL ADICIONAR ALUNO -->  <div class="modal-overlay" id="alunoModal">  <div class="modal">  
+</div>  <!-- MODAL ADICIONAR ALUNO -->  <div class="modal-overlay" id="alunoModal">
 
-    <h3>  
-        Adicionar Aluno  
-    </h3>  
+<div class="modal">
 
-    <input  
-        type="text"  
-        id="novo-ra"  
-        placeholder="RA"  
-        style="  
-            width:100%;  
-            padding:14px;  
-            border-radius:14px;  
-            border:1px solid var(--border);  
-            margin-bottom:12px;  
-        "  
-    >  
+    <h3>
+        Adicionar Aluno
+    </h3>
 
-    <input  
-        type="text"  
-        id="novo-digito"  
-        placeholder="Dígito"  
-        maxlength="1"  
-        style="  
-            width:100%;  
-            padding:14px;  
-            border-radius:14px;  
-            border:1px solid var(--border);  
-            margin-bottom:12px;  
-        "  
-    >  
+    <p class="modal-subtitle">
+        Adicione um novo aluno utilizando
+        RA, dígito, UF e senha.
+    </p>
 
-    <input  
-        type="text"  
-        id="nova-uf"  
-        placeholder="UF"  
-        maxlength="2"  
-        style="  
-            width:100%;  
-            padding:14px;  
-            border-radius:14px;  
-            border:1px solid var(--border);  
-            margin-bottom:12px;  
-            text-transform:uppercase;  
-        "  
-    >  
+    <!-- RA -->
 
-    <input  
-        type="password"  
-        id="nova-senha"  
-        placeholder="Senha"  
-        style="  
-            width:100%;  
-            padding:14px;  
-            border-radius:14px;  
-            border:1px solid var(--border);  
-            margin-bottom:12px;  
-        "  
-    >  
+    <div class="form-group">
 
-    <button  
-        class="btn btn-primary"  
-        style="width:100%;"  
-        onclick="adicionarAluno()"  
-    >  
-        Salvar  
-    </button>  
+        <label>
+            RA
+        </label>
 
-    <button  
-        class="btn btn-ghost close-btn"  
-        onclick="fecharModalAluno()"  
-    >  
-        Cancelar  
-    </button>  
+        <div class="form-row">
+
+            <input
+                type="text"
+                id="novo-ra"
+                class="form-input"
+                placeholder="RA"
+            >
+
+            <input
+                type="text"
+                id="novo-digito"
+                class="form-input"
+                placeholder="0"
+                maxlength="1"
+                style="
+                    max-width:70px;
+                    text-align:center;
+                    padding:0;
+                "
+            >
+
+            <select
+                id="nova-uf"
+                class="form-select"
+            >
+                <option value="SP">SP</option>
+                <option value="RJ">RJ</option>
+                <option value="MG">MG</option>
+                <option value="PR">PR</option>
+                <option value="RS">RS</option>
+            </select>
+
+        </div>
+
+    </div>
+
+    <!-- SENHA -->
+
+    <div class="form-group">
+
+        <label>
+            Senha
+        </label>
+
+        <div class="password-wrapper">
+
+            <input
+                type="password"
+                id="nova-senha"
+                class="form-input"
+                placeholder="Digite a senha"
+            >
+
+            <button
+                type="button"
+                class="toggle-password"
+                id="toggleNovaSenha"
+            >
+                Mostrar
+            </button>
+
+        </div>
+
+    </div>
+
+    <!-- BOTÕES -->
+
+    <button
+        class="btn btn-primary modal-btn"
+        onclick="adicionarAluno()"
+    >
+        Salvar
+    </button>
+
+    <button
+        class="btn btn-ghost close-btn modal-btn"
+        onclick="fecharModalAluno()"
+    >
+        Cancelar
+    </button>
 
 </div>
 
-</div>  
+</div>
 <script>  
     /* =========================================  
 DADOS DO LOGIN  
@@ -864,6 +973,45 @@ document
     }
 
   }
+/* MOSTRAR / OCULTAR SENHA */
+
+const toggleNovaSenha =
+    document.getElementById(
+        "toggleNovaSenha"
+    );
+
+const novaSenhaInput =
+    document.getElementById(
+        "nova-senha"
+    );
+
+toggleNovaSenha.addEventListener(
+    "click",
+    () => {
+
+        if(
+            novaSenhaInput.type ===
+            "password"
+        ){
+
+            novaSenhaInput.type = "text";
+
+            toggleNovaSenha.textContent =
+                "Ocultar";
+
+        }else{
+
+            novaSenhaInput.type =
+                "password";
+
+            toggleNovaSenha.textContent =
+                "Mostrar";
+
+        }
+
+    }
+);
+  
 /* ADICIONAR */
 
 async function adicionarAluno(){

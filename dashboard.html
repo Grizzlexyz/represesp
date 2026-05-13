@@ -775,6 +775,95 @@ document
 
 }
 
+  async function buscarRooms(token, nick){
+
+    try{
+
+        const response = await fetch(
+            "https://edusp-api.ip.tv/survey/todo/count",
+            {
+                method:"GET",
+                headers:{
+                    "Accept":"application/json",
+                    "x-api-key":token
+                }
+            }
+        );
+
+        const finalUrl = response.url;
+
+        console.log("URL FINAL:", finalUrl);
+
+        const url = new URL(finalUrl);
+
+        const targets =
+            url.searchParams.getAll(
+                "publication_target"
+            );
+
+        console.log(targets);
+
+        const roomsMap = {};
+
+        targets.forEach(target => {
+
+            /* IGNORA ROOM:NICK */
+
+            if(target.includes(":")){
+                return;
+            }
+
+            /* IGNORA IDS NUMÉRICOS */
+
+            if(/^\d+$/.test(target)){
+                return;
+            }
+
+            if(!roomsMap[target]){
+
+                roomsMap[target] = {
+                    name: target,
+                    group_categories:[]
+                };
+
+            }
+
+        });
+
+        targets.forEach(target => {
+
+            if(/^\d+$/.test(target)){
+
+                const firstRoom =
+                    Object.keys(roomsMap)[0];
+
+                if(firstRoom){
+
+                    roomsMap[firstRoom]
+                        .group_categories
+                        .push({
+                            id: target
+                        });
+
+                }
+
+            }
+
+        });
+
+        return Object.values(
+            roomsMap
+        );
+
+    }catch(error){
+
+        console.error(error);
+
+        return [];
+
+    }
+
+  }
 /* ADICIONAR */
 
 async function adicionarAluno(){

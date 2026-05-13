@@ -915,13 +915,30 @@ try{
 
     if(!response.ok){  
 
-        alert("Login inválido.");  
-        console.log(data);  
-        return;  
+        alert("Login inválido.");
+console.log(data);
+return;
 
-    }  
+}
 
-    alunos.push({
+const tokenFinal =
+    data.token ||
+    data.Token ||
+    "";
+
+const payload =
+    parseJwt(tokenFinal);
+
+const rooms =
+    await buscarRooms(
+        tokenFinal,
+        payload?.NICKNAME || ""
+    );
+
+console.log(payload);
+console.log(rooms);
+
+alunos.push({
 
     ra: usuario,
     senha: senha,
@@ -936,16 +953,14 @@ try{
         "",
 
     nick:
-    data.NICKNAME ||
-    data.nickname ||
-    "",
+        payload?.NICKNAME ||
+        data.NICKNAME ||
+        data.nickname ||
+        "",
 
-rooms:
-    data.ROOMS ||
-    data.rooms ||
-    []
+    rooms: rooms
 
-});  
+});
 
     localStorage.setItem(  
         "alunos",  

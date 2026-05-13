@@ -1,5 +1,14 @@
 exports.handler = async (event) => {
 
+    if(event.httpMethod !== "POST"){
+        return {
+            statusCode: 405,
+            body: JSON.stringify({
+                error: "Método não permitido"
+            })
+        };
+    }
+
     try{
 
         const body = JSON.parse(event.body);
@@ -7,12 +16,12 @@ exports.handler = async (event) => {
         const response = await fetch(
             "https://sedintegracoes.educacao.sp.gov.br/saladofuturobffapi/credenciais/api/LoginCompletoToken",
             {
-                method:"POST",
-                headers:{
-                    "Content-Type":"application/json",
-                    "Accept":"application/json"
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Accept": "application/json"
                 },
-                body:JSON.stringify({
+                body: JSON.stringify({
                     user: body.user,
                     senha: body.senha
                 })
@@ -21,21 +30,24 @@ exports.handler = async (event) => {
 
         const data = await response.json();
 
-        return{
+        return {
             statusCode: response.status,
-            headers:{
-                "Content-Type":"application/json"
+            headers: {
+                "Content-Type": "application/json",
+                "Access-Control-Allow-Origin": "*"
             },
             body: JSON.stringify(data)
         };
 
     }catch(error){
 
-        return{
-            statusCode:500,
-            body:JSON.stringify({
-                erro:"Erro interno",
-                detalhes:error.message
+        return {
+            statusCode: 500,
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                error: error.message
             })
         };
 

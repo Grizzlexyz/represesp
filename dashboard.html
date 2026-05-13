@@ -602,15 +602,22 @@ try{
 
     /* BUSCAR DADOS DAS TAREFAS */  
 
-    const response = await fetch(  
-        "/.netlify/functions/tarefas",  
-        {  
-            method:"GET",  
-            headers:{  
-                "Authorization":`Bearer ${token}`  
-            }  
-        }  
-    );  
+    const nick = localStorage.getItem("nick");
+const rooms = localStorage.getItem("rooms");
+
+const params = new URLSearchParams({
+    authToken: token,
+    nick: nick,
+    rooms: rooms,
+    expired: "false"
+});
+
+const response = await fetch(
+    `/.netlify/functions/tarefas?${params.toString()}`,
+    {
+        method:"GET"
+    }
+);  
 
     const data = await response.json();  
 

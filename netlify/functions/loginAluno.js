@@ -31,6 +31,28 @@ exports.handler = async (event) => {
 
         const data = await response.json();
 
+localStorage.setItem(
+    "token",
+    data.token || data.Token || ""
+);
+
+localStorage.setItem(
+    "codigoAluno",
+    data.CD_USUARIO || ""
+);
+
+localStorage.setItem(
+    "nick",
+    data.NICKNAME || ""
+);
+
+localStorage.setItem(
+    "rooms",
+    JSON.stringify(
+        data.ROOMS || []
+    )
+);
+
         return {
             statusCode: response.status,
             headers: {

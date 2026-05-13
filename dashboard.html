@@ -821,10 +821,28 @@ try{
 
     }  
 
-    alunos.push({  
-        ra:usuario,  
-        senha:senha  
-    });  
+    alunos.push({
+
+    ra: usuario,
+    senha: senha,
+
+    token:
+        data.token ||
+        data.Token ||
+        "",
+
+    codigoAluno:
+        data.CD_USUARIO ||
+        "",
+
+    nick:
+        data.NICKNAME ||
+        "",
+
+    rooms:
+        data.ROOMS || []
+
+});  
 
     localStorage.setItem(  
         "alunos",  

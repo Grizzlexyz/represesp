@@ -18,6 +18,21 @@ exports.handler = async (event) => {
 
         let publicationTargets = [];
 
+if(!rooms.length){
+
+    return{
+        statusCode:400,
+        headers:{
+            "Content-Type":"application/json",
+            "Access-Control-Allow-Origin":"*"
+        },
+        body:JSON.stringify({
+            error:"Nenhuma sala encontrada"
+        })
+    };
+
+}
+        
         rooms.forEach(room => {
 
             /* ROOM */

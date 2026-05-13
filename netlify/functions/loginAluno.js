@@ -19,7 +19,8 @@ exports.handler = async (event) => {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
-                    "Accept": "application/json"
+                    "Accept": "application/json",
+                    "Ocp-Apim-Subscription-Key": process.env.API_KEY
                 },
                 body: JSON.stringify({
                     user: body.user,

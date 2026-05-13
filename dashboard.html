@@ -847,11 +847,14 @@ try{
         "",
 
     nick:
-        data.NICKNAME ||
-        "",
+    data.NICKNAME ||
+    data.nickname ||
+    "",
 
-    rooms:
-        data.ROOMS || []
+rooms:
+    data.ROOMS ||
+    data.rooms ||
+    []
 
 });  
 

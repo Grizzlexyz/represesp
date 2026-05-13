@@ -585,21 +585,63 @@ function deletarAluno(ra){
 
 /* MODAL ESTATÍSTICAS */
 
-function verificarDesempenho(ra, senha){
+async function verificarDesempenho(ra, senha){
 
-    /*
-    API FUTURA
+    try{
 
-    Aqui você vai buscar:
-    Pendências
-    Expiradas
-    */
+        document.getElementById("pendencias").textContent = "...";
+        document.getElementById("expiradas").textContent = "...";
 
-    document.getElementById("pendencias").textContent = "X";
-    document.getElementById("expiradas").textContent = "X";
+        document.getElementById("statsModal")
+            .classList.add("active");
 
-    document.getElementById("statsModal")
-        .classList.add("active");
+        /* BUSCAR DADOS DAS TAREFAS */
+
+        const response = await fetch(
+            "/.netlify/functions/tarefas",
+            {
+                method:"GET",
+                headers:{
+                    "Authorization":`Bearer ${token}`
+                }
+            }
+        );
+
+        const data = await response.json();
+
+        console.log("Tarefas:", data);
+
+        /* CONTAGEM */
+
+        const pendentes =
+            Array.isArray(data.pendentes)
+            ? data.pendentes.length
+            : 0;
+
+        const expiradas =
+            Array.isArray(data.expiradas)
+            ? data.expiradas.length
+            : 0;
+
+        /* ATUALIZAR MODAL */
+
+        document.getElementById("pendencias")
+            .textContent = pendentes;
+
+        document.getElementById("expiradas")
+            .textContent = expiradas;
+
+    }catch(error){
+
+        console.error(error);
+
+        document.getElementById("pendencias")
+            .textContent = "Erro";
+
+        document.getElementById("expiradas")
+            .textContent = "Erro";
+
+    }
 
 }
 

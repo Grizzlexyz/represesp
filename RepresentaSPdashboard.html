@@ -1,0 +1,634 @@
+<!--
+Arquivo: dashboard.html
+Ação: update
+Sugestão de commit:
+refactor: atualizar dashboard para layout em tabela estilo painel administrativo
+-->
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Dashboard</title>
+
+<!-- FONT AWESOME -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+<style>
+
+:root{
+    --bg:#f3f3f3;
+    --card:#ffffff;
+    --primary:#6f2cff;
+    --text:#111111;
+    --text-muted:#666666;
+    --border:#ececec;
+    --danger:#ff3b3b;
+}
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Arial, sans-serif;
+}
+
+body{
+    background:var(--bg);
+    padding:20px;
+    min-height:100vh;
+    color:var(--text);
+}
+
+/* CONTAINER */
+
+.container{
+    width:100%;
+    max-width:1250px;
+    margin:auto;
+}
+
+/* HEADER */
+
+header{
+    width:100%;
+    background:var(--card);
+    border-radius:28px;
+    padding:22px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    margin-bottom:20px;
+    box-shadow:0 8px 30px rgba(0,0,0,0.05);
+}
+
+header h2{
+    font-size:26px;
+    margin-bottom:5px;
+}
+
+/* BOTÕES */
+
+.btn{
+    border:none;
+    cursor:pointer;
+    transition:0.2s;
+}
+
+.btn:hover{
+    transform:translateY(-2px);
+}
+
+.btn-primary{
+    background:var(--primary);
+    color:#fff;
+    border-radius:14px;
+    padding:10px 14px;
+}
+
+.btn-ghost{
+    background:#f5f5f5;
+    color:var(--text);
+    border-radius:14px;
+    padding:10px 14px;
+}
+
+.theme-btn{
+    width:45px;
+    height:45px;
+    border:none;
+    border-radius:14px;
+    background:#f5f5f5;
+    cursor:pointer;
+    font-size:18px;
+}
+
+/* CARD */
+
+.card{
+    width:100%;
+    background:var(--card);
+    border-radius:28px;
+    padding:24px;
+    box-shadow:0 8px 30px rgba(0,0,0,0.05);
+}
+
+/* TABLE */
+
+table{
+    width:100%;
+    border-collapse:collapse;
+}
+
+thead{
+    background:#fafafa;
+}
+
+th{
+    padding:18px;
+    text-align:left;
+    font-size:14px;
+    color:var(--text-muted);
+    border-bottom:1px solid var(--border);
+}
+
+td{
+    padding:18px;
+    border-bottom:1px solid var(--border);
+}
+
+tbody tr{
+    transition:0.2s;
+}
+
+tbody tr:hover{
+    background:#fafafa;
+}
+
+/* MODAL */
+
+.modal-overlay{
+    position:fixed;
+    inset:0;
+    background:rgba(0,0,0,0.4);
+    display:none;
+    align-items:center;
+    justify-content:center;
+    padding:20px;
+    z-index:100;
+}
+
+.modal-overlay.active{
+    display:flex;
+}
+
+.modal{
+    width:100%;
+    max-width:400px;
+    background:#ffffff;
+    border-radius:28px;
+    padding:25px;
+    animation:fadeIn 0.2s ease;
+}
+
+.modal h3{
+    margin-bottom:20px;
+    font-size:22px;
+}
+
+.stats-box{
+    width:100%;
+    background:#f7f7f7;
+    border-radius:20px;
+    padding:18px;
+    margin-bottom:15px;
+}
+
+.stats-label{
+    font-size:14px;
+    color:var(--text-muted);
+    margin-bottom:8px;
+}
+
+.stats-value{
+    font-size:26px;
+    font-weight:bold;
+}
+
+.close-btn{
+    width:100%;
+    margin-top:10px;
+}
+
+/* ANIMAÇÃO */
+
+@keyframes fadeIn{
+
+    from{
+        opacity:0;
+        transform:translateY(10px);
+    }
+
+    to{
+        opacity:1;
+        transform:translateY(0);
+    }
+
+}
+
+/* RESPONSIVO */
+
+@media(max-width:768px){
+
+    header{
+        flex-direction:column;
+        gap:20px;
+        align-items:flex-start;
+    }
+
+    table{
+        min-width:700px;
+    }
+
+}
+
+.hidden{
+    display:none;
+}
+
+</style>
+</head>
+<body>
+
+<div class="container">
+
+    <!-- HEADER -->
+
+    <header>
+
+        <div>
+            <h2 id="greeting">
+    Carregando...
+</h2>
+
+            <p 
+    id="turma-info"
+    style="
+        color: var(--text-muted);
+        font-size: 14px;
+        margin-top: 4px;
+    "
+>
+    Carregando turma...
+</p>
+
+<p 
+    id="escola-info"
+    style="
+        color: var(--text-muted);
+        font-size: 13px;
+        margin-top: 6px;
+    "
+>
+    Carregando escola...
+</p>
+        </div>
+
+        <div style="display: flex; gap: 10px;">
+
+            <button class="theme-btn" onclick="toggleTheme()" title="Trocar Tema">
+                <i class="fas fa-moon"></i>
+            </button>
+
+            <button class="btn btn-ghost" id="btn-logout" onclick="logout()">
+                <i class="fas fa-sign-out-alt"></i>
+            </button>
+
+        </div>
+
+    </header>
+
+    <!-- CARD -->
+
+    <div class="card">
+
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+
+            <h4>
+                Alunos Cadastrados
+            </h4>
+
+            <div style="display: flex; gap: 8px;">
+
+                <button class="btn btn-ghost" onclick="exportarDados()">
+                    <i class="fas fa-download"></i>
+                </button>
+
+                <button class="btn btn-ghost" onclick="document.getElementById('import-file').click()">
+                    <i class="fas fa-upload"></i>
+                </button>
+
+                <input 
+                    type="file" 
+                    id="import-file" 
+                    class="hidden" 
+                    accept=".json" 
+                    onchange="importarDados(event)"
+                >
+
+            </div>
+
+        </div>
+
+        <div style="overflow-x: auto;">
+
+            <table>
+
+                <thead>
+
+                    <tr>
+                        <th>RA do Aluno</th>
+                        <th>Sala Alocada</th>
+                        <th style="text-align: right;">
+                            Ações
+                        </th>
+                    </tr>
+
+                </thead>
+
+                <tbody id="corpo-tabela">
+
+                    <!-- ALUNO -->
+
+                    <tr>
+
+                        <td style="font-weight: 600; font-family: monospace;">
+                            114284187xsp
+                        </td>
+
+                        <td style="color: var(--text-muted); font-size: 14px;">
+                            r36a18ac084f954070-l
+                        </td>
+
+                        <td style="text-align: right;">
+
+                            <button 
+                                class="btn btn-ghost"
+                                style="padding: 6px 10px"
+                                onclick="editarAluno('114284187xsp')"
+                            >
+                                <i class="fas fa-edit"></i>
+                            </button>
+
+                            <button 
+                                class="btn btn-ghost"
+                                style="padding: 6px 10px; color: var(--danger)"
+                                onclick="deletarAluno('114284187xsp')"
+                            >
+                                <i class="fas fa-trash"></i>
+                            </button>
+
+                            <button 
+                                class="btn btn-primary"
+                                style="padding: 6px 10px"
+                                onclick="verificarDesempenho('114284187xsp', 'Abilio@25')"
+                            >
+                                <i class="fas fa-chart-simple"></i>
+                            </button>
+
+                        </td>
+
+                    </tr>
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</div>
+
+<!-- MODAL -->
+
+<div class="modal-overlay" id="statsModal">
+
+    <div class="modal">
+
+        <h3>
+            Estatísticas
+        </h3>
+
+        <div class="stats-box">
+
+            <div class="stats-label">
+                Pendências
+            </div>
+
+            <div class="stats-value" id="pendencias">
+                X
+            </div>
+
+        </div>
+
+        <div class="stats-box">
+
+            <div class="stats-label">
+                Expiradas
+            </div>
+
+            <div class="stats-value" id="expiradas">
+                X
+            </div>
+
+        </div>
+
+        <button class="btn btn-primary close-btn" onclick="fecharModal()">
+            Fechar
+        </button>
+
+    </div>
+
+</div>
+
+<script>
+    /* =========================================
+DADOS DO LOGIN
+========================================= */
+
+const token = localStorage.getItem("token");
+const codigoAluno = localStorage.getItem("codigoAluno");
+
+/* ELEMENTOS */
+
+const greeting = document.getElementById("greeting");
+
+const turmaInfo = document.getElementById("turma-info");
+
+const escolaInfo = document.getElementById("escola-info");
+
+/* API */
+
+const API_KEY = "d701a2043aa24d7ebb37e9adf60d043b";
+if(!token || !codigoAluno){
+
+    alert("Login não encontrado.");
+
+    window.location.href = "index.html";
+
+}
+
+/* CARREGAR DADOS */
+
+async function carregarDadosAluno(){
+
+    try{
+
+        /* BUSCAR TURMA */
+
+        const responseTurma = await fetch(
+            `https://sedintegracoes.educacao.sp.gov.br/saladofuturobffapi/apihubintegracoes/api/v2/Turma/ListarTurmasPorAluno?codigoAluno=${codigoAluno}`,
+            {
+                method:"GET",
+                headers:{
+                    "Accept":"application/json, text/plain, */*",
+                    "Authorization":`Bearer ${token}`,
+                    "Ocp-Apim-Subscription-Key":API_KEY
+                }
+            }
+        );
+
+        const turmaData = await responseTurma.json();
+
+        console.log("Turma:", turmaData);
+
+        const turma = turmaData.data[0];
+
+        /* NOME */
+
+        const nomeCompleto = localStorage.getItem("nome");
+
+        const primeiroNome = nomeCompleto
+    ? nomeCompleto.split(" ")[0]
+    : "Aluno";
+
+        greeting.textContent = `Olá, ${primeiroNome}!`;
+
+        /* TURMA */
+
+        turmaInfo.textContent =
+            `${turma.NumeroSerie}º Ano ${turma.IdentificadorTurma}`;
+
+        /* ESCOLA */
+
+        escolaInfo.textContent =
+            turma.NomeEscola;
+
+        /* TÍTULO */
+
+        document.title =
+            `${turma.NumeroSerie}º Ano ${turma.IdentificadorTurma}`;
+
+    }catch(error){
+
+        console.error(error);
+
+        greeting.textContent = "Erro ao carregar";
+
+        turmaInfo.textContent =
+            "Erro ao carregar turma";
+
+        escolaInfo.textContent =
+            "Erro ao carregar escola";
+
+    }
+
+}
+
+/* INICIAR */
+
+carregarDadosAluno();
+
+/* THEME */
+
+function toggleTheme(){
+
+    alert("Sistema de tema aqui.");
+
+}
+
+/* LOGOUT */
+
+function logout(){
+
+    alert("Logout aqui.");
+
+}
+
+/* EXPORTAR */
+
+function exportarDados(){
+
+    alert("Exportação aqui.");
+
+}
+
+/* IMPORTAR */
+
+function importarDados(event){
+
+    alert("Importação aqui.");
+
+}
+
+/* EDITAR */
+
+function editarAluno(ra){
+
+    alert("Editar aluno: " + ra);
+
+}
+
+/* DELETAR */
+
+function deletarAluno(ra){
+
+    const confirmar = confirm("Deseja deletar o aluno " + ra + "?");
+
+    if(confirmar){
+
+        alert("Aluno deletado.");
+
+    }
+
+}
+
+/* MODAL ESTATÍSTICAS */
+
+function verificarDesempenho(ra, senha){
+
+    /*
+    API FUTURA
+
+    Aqui você vai buscar:
+    Pendências
+    Expiradas
+    */
+
+    document.getElementById("pendencias").textContent = "X";
+    document.getElementById("expiradas").textContent = "X";
+
+    document.getElementById("statsModal")
+        .classList.add("active");
+
+}
+
+/* FECHAR MODAL */
+
+function fecharModal(){
+
+    document.getElementById("statsModal")
+        .classList.remove("active");
+
+}
+
+/* FECHAR AO CLICAR FORA */
+
+document.getElementById("statsModal")
+.addEventListener("click", (e) => {
+
+    if(e.target.id === "statsModal"){
+
+        fecharModal();
+
+    }
+
+});
+
+</script>
+
+</body>
+</html>

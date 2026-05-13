@@ -294,31 +294,29 @@ tbody tr:hover{
 
     <div class="card">
 
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+        <div style="display: flex; gap: 8px;">
 
-            <h4>
-                Alunos Cadastrados
-            </h4>
+    <button class="btn btn-ghost" onclick="exportarDados()">
+        <i class="fas fa-download"></i>
+    </button>
 
-            <div style="display: flex; gap: 8px;">
+    <button class="btn btn-ghost" onclick="document.getElementById('import-file').click()">
+        <i class="fas fa-upload"></i>
+    </button>
 
-                <button class="btn btn-ghost" onclick="exportarDados()">
-                    <i class="fas fa-download"></i>
-                </button>
+    <button class="btn btn-primary" onclick="abrirModalAluno()">
+        <i class="fas fa-plus"></i>
+    </button>
 
-                <button class="btn btn-ghost" onclick="document.getElementById('import-file').click()">
-                    <i class="fas fa-upload"></i>
-                </button>
+    <input 
+        type="file" 
+        id="import-file" 
+        class="hidden" 
+        accept=".json" 
+        onchange="importarDados(event)"
+    >
 
-                <input 
-                    type="file" 
-                    id="import-file" 
-                    class="hidden" 
-                    accept=".json" 
-                    onchange="importarDados(event)"
-                >
-
-            </div>
+        </div>
 
         </div>
 
@@ -341,46 +339,6 @@ tbody tr:hover{
                 <tbody id="corpo-tabela">
 
                     <!-- ALUNO -->
-
-                    <tr>
-
-                        <td style="font-weight: 600; font-family: monospace;">
-                            114284187xsp
-                        </td>
-
-                        <td style="color: var(--text-muted); font-size: 14px;">
-                            r36a18ac084f954070-l
-                        </td>
-
-                        <td style="text-align: right;">
-
-                            <button 
-                                class="btn btn-ghost"
-                                style="padding: 6px 10px"
-                                onclick="editarAluno('114284187xsp')"
-                            >
-                                <i class="fas fa-edit"></i>
-                            </button>
-
-                            <button 
-                                class="btn btn-ghost"
-                                style="padding: 6px 10px; color: var(--danger)"
-                                onclick="deletarAluno('114284187xsp')"
-                            >
-                                <i class="fas fa-trash"></i>
-                            </button>
-
-                            <button 
-                                class="btn btn-primary"
-                                style="padding: 6px 10px"
-                                onclick="verificarDesempenho('114284187xsp', 'Abilio@25')"
-                            >
-                                <i class="fas fa-chart-simple"></i>
-                            </button>
-
-                        </td>
-
-                    </tr>
 
                 </tbody>
 
@@ -434,6 +392,60 @@ tbody tr:hover{
 
 </div>
 
+<!-- MODAL ADICIONAR ALUNO -->
+
+<div class="modal-overlay" id="alunoModal">
+
+    <div class="modal">
+
+        <h3>
+            Adicionar Aluno
+        </h3>
+
+        <input
+            type="text"
+            id="novo-ra"
+            placeholder="RA do aluno"
+            style="
+                width:100%;
+                padding:14px;
+                border-radius:14px;
+                border:1px solid var(--border);
+                margin-bottom:12px;
+            "
+        >
+
+        <input
+            type="text"
+            id="nova-sala"
+            placeholder="Sala alocada"
+            style="
+                width:100%;
+                padding:14px;
+                border-radius:14px;
+                border:1px solid var(--border);
+                margin-bottom:12px;
+            "
+        >
+
+        <button
+            class="btn btn-primary"
+            style="width:100%;"
+            onclick="adicionarAluno()"
+        >
+            Salvar
+        </button>
+
+        <button
+            class="btn btn-ghost close-btn"
+            onclick="fecharModalAluno()"
+        >
+            Cancelar
+        </button>
+
+    </div>
+
+</div>
 <script>
     /* =========================================
 DADOS DO LOGIN
@@ -667,6 +679,283 @@ document.getElementById("statsModal")
 
 });
 
+    /* =========================================
+ALUNOS
+========================================= */
+
+let alunos =
+    JSON.parse(localStorage.getItem("alunos")) || [];
+
+const corpoTabela =
+    document.getElementById("corpo-tabela");
+
+/* RENDERIZAR */
+
+function renderizarAlunos(){
+
+    corpoTabela.innerHTML = "";
+
+    alunos.forEach((aluno, index) => {
+
+        corpoTabela.innerHTML += `
+        
+        <tr>
+
+            <td style="font-weight: 600; font-family: monospace;">
+                ${aluno.ra}
+            </td>
+
+            <td style="color: var(--text-muted); font-size: 14px;">
+                ${aluno.sala}
+            </td>
+
+            <td style="text-align: right;">
+
+                <button 
+                    class="btn btn-ghost"
+                    style="padding: 6px 10px"
+                    onclick="editarAluno(${index})"
+                >
+                    <i class="fas fa-edit"></i>
+                </button>
+
+                <button 
+                    class="btn btn-ghost"
+                    style="padding: 6px 10px; color: var(--danger)"
+                    onclick="deletarAluno(${index})"
+                >
+                    <i class="fas fa-trash"></i>
+                </button>
+
+                <button 
+                    class="btn btn-primary"
+                    style="padding: 6px 10px"
+                    onclick="verificarDesempenho('${aluno.ra}')"
+                >
+                    <i class="fas fa-chart-simple"></i>
+                </button>
+
+            </td>
+
+        </tr>
+        
+        `;
+
+    });
+
+}
+
+/* MODAL */
+
+function abrirModalAluno(){
+
+    document
+        .getElementById("alunoModal")
+        .classList.add("active");
+
+}
+
+function fecharModalAluno(){
+
+    document
+        .getElementById("alunoModal")
+        .classList.remove("active");
+
+}
+
+/* ADICIONAR */
+
+function adicionarAluno(){
+
+    const ra =
+        document.getElementById("novo-ra")
+        .value.trim();
+
+    const sala =
+        document.getElementById("nova-sala")
+        .value.trim();
+
+    if(!ra || !sala){
+
+        alert("Preencha todos os campos.");
+        return;
+
+    }
+
+    alunos.push({
+        ra,
+        sala
+    });
+
+    localStorage.setItem(
+        "alunos",
+        JSON.stringify(alunos)
+    );
+
+    renderizarAlunos();
+
+    document.getElementById("novo-ra").value = "";
+    document.getElementById("nova-sala").value = "";
+
+    fecharModalAluno();
+
+}
+
+/* EDITAR */
+
+function editarAluno(index){
+
+    const novoRA = prompt(
+        "Novo RA:",
+        alunos[index].ra
+    );
+
+    if(!novoRA) return;
+
+    const novaSala = prompt(
+        "Nova sala:",
+        alunos[index].sala
+    );
+
+    if(!novaSala) return;
+
+    alunos[index].ra = novoRA;
+    alunos[index].sala = novaSala;
+
+    localStorage.setItem(
+        "alunos",
+        JSON.stringify(alunos)
+    );
+
+    renderizarAlunos();
+
+}
+
+/* DELETAR */
+
+function deletarAluno(index){
+
+    const confirmar = confirm(
+        "Deseja remover este aluno?"
+    );
+
+    if(!confirmar) return;
+
+    alunos.splice(index, 1);
+
+    localStorage.setItem(
+        "alunos",
+        JSON.stringify(alunos)
+    );
+
+    renderizarAlunos();
+
+}
+
+/* EXPORTAR */
+
+function exportarDados(){
+
+    const blob = new Blob(
+        [JSON.stringify(alunos, null, 4)],
+        { type:"application/json" }
+    );
+
+    const url = URL.createObjectURL(blob);
+
+    const a = document.createElement("a");
+
+    a.href = url;
+    a.download = "alunos.json";
+    a.click();
+
+}
+
+/* IMPORTAR */
+
+function importarDados(event){
+
+    const arquivo = event.target.files[0];
+
+    if(!arquivo) return;
+
+    const leitor = new FileReader();
+
+    leitor.onload = function(e){
+
+        try{
+
+            alunos = JSON.parse(e.target.result);
+
+            localStorage.setItem(
+                "alunos",
+                JSON.stringify(alunos)
+            );
+
+            renderizarAlunos();
+
+            alert("Importado com sucesso.");
+
+        }catch{
+
+            alert("Arquivo inválido.");
+
+        }
+
+    };
+
+    leitor.readAsText(arquivo);
+
+}
+
+/* TEMA */
+
+function toggleTheme(){
+
+    document.body.classList.toggle("dark");
+
+    const dark =
+        document.body.classList.contains("dark");
+
+    if(dark){
+
+        document.documentElement.style.setProperty("--bg", "#111111");
+        document.documentElement.style.setProperty("--card", "#1c1c1c");
+        document.documentElement.style.setProperty("--text", "#ffffff");
+        document.documentElement.style.setProperty("--text-muted", "#aaaaaa");
+        document.documentElement.style.setProperty("--border", "#333333");
+
+    }else{
+
+        document.documentElement.style.setProperty("--bg", "#f3f3f3");
+        document.documentElement.style.setProperty("--card", "#ffffff");
+        document.documentElement.style.setProperty("--text", "#111111");
+        document.documentElement.style.setProperty("--text-muted", "#666666");
+        document.documentElement.style.setProperty("--border", "#ececec");
+
+    }
+
+}
+
+/* LOGOUT */
+
+function logout(){
+
+    const confirmar = confirm(
+        "Deseja sair?"
+    );
+
+    if(!confirmar) return;
+
+    localStorage.clear();
+
+    window.location.href = "index.html";
+
+}
+
+/* INICIAR */
+
+renderizarAlunos();
 </script>
 
 </body>

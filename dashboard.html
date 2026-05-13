@@ -469,14 +469,14 @@ async function carregarDadosAluno(){
         /* BUSCAR TURMA */
 
         const responseTurma = await fetch(
-    `/.netlify/functions/turma?codigoAluno=${codigoAluno}`,            {
-                method:"GET",
-                headers:{
-                    "Accept":"application/json, text/plain, */*",
-                    "Authorization":`Bearer ${token}`,
-                }
-            }
-        );
+    `/.netlify/functions/turma?codigoAluno=${codigoAluno}`,
+    {
+        method:"GET",
+        headers:{
+            "Authorization":`Bearer ${token}`
+        }
+    }
+);
 
         const turmaData = await responseTurma.json();
 

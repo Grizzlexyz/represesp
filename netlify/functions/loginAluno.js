@@ -3,6 +3,10 @@ exports.handler = async (event) => {
     if(event.httpMethod !== "POST"){
         return {
             statusCode: 405,
+            headers: {
+                "Content-Type": "application/json",
+                "Access-Control-Allow-Origin": "*"
+            },
             body: JSON.stringify({
                 error: "Método não permitido"
             })
@@ -12,6 +16,21 @@ exports.handler = async (event) => {
     try{
 
         const body = JSON.parse(event.body);
+
+        if(!body.user || !body.senha){
+
+            return {
+                statusCode: 400,
+                headers: {
+                    "Content-Type": "application/json",
+                    "Access-Control-Allow-Origin": "*"
+                },
+                body: JSON.stringify({
+                    error: "Usuário e senha obrigatórios"
+                })
+            };
+
+        }
 
         const response = await fetch(
             "https://sedintegracoes.educacao.sp.gov.br/saladofuturobffapi/credenciais/api/LoginCompletoToken",
@@ -29,29 +48,21 @@ exports.handler = async (event) => {
             }
         );
 
-        const data = await response.json();
+        const text = await response.text();
 
-localStorage.setItem(
-    "token",
-    data.token || data.Token || ""
-);
+        let data = {};
 
-localStorage.setItem(
-    "codigoAluno",
-    data.CD_USUARIO || ""
-);
+        try{
 
-localStorage.setItem(
-    "nick",
-    data.NICKNAME || ""
-);
+            data = JSON.parse(text);
 
-localStorage.setItem(
-    "rooms",
-    JSON.stringify(
-        data.ROOMS || []
-    )
-);
+        }catch{
+
+            data = {
+                raw: text
+            };
+
+        }
 
         return {
             statusCode: response.status,
@@ -64,10 +75,13 @@ localStorage.setItem(
 
     }catch(error){
 
+        console.error("LOGIN ERROR:", error);
+
         return {
             statusCode: 500,
             headers: {
-                "Content-Type": "application/json"
+                "Content-Type": "application/json",
+                "Access-Control-Allow-Origin": "*"
             },
             body: JSON.stringify({
                 error: error.message

@@ -838,57 +838,89 @@ document.getElementById("corpo-tabela");
 
 function renderizarAlunos(){
 
-corpoTabela.innerHTML = "";  
+    corpoTabela.innerHTML = "";
 
-alunos.forEach((aluno, index) => {  
+    alunos.forEach((aluno, index) => {
 
-    corpoTabela.innerHTML += `  
-      
-    <tr>  
+        corpoTabela.innerHTML += `
+        
+        <tr>
 
-        <td style="font-weight: 600; font-family: monospace;">  
-            ${aluno.ra}  
-        </td>  
+            <td>
 
-        <td style="color: var(--text-muted); font-size: 14px;">  
-            ${aluno.sala}  
-        </td>  
+                <div style="
+                    display:flex;
+                    flex-direction:column;
+                    gap:6px;
+                ">
 
-        <td style="text-align: right;">  
+                    <span style="
+                        font-weight:bold;
+                        font-size:15px;
+                    ">
+                        ${aluno.nome || "Aluno"}
+                    </span>
 
-            <button   
-                class="btn btn-ghost"  
-                style="padding: 6px 10px"  
-                onclick="editarAluno(${index})"  
-            >  
-                <i class="fas fa-edit"></i>  
-            </button>  
+                    <span style="
+                        font-size:13px;
+                        color:var(--text-muted);
+                        font-family:monospace;
+                    ">
+                        RA: ${aluno.ra}
+                    </span>
 
-            <button   
-                class="btn btn-ghost"  
-                style="padding: 6px 10px; color: var(--danger)"  
-                onclick="deletarAluno(${index})"  
-            >  
-                <i class="fas fa-trash"></i>  
-            </button>  
+                    <span style="
+                        font-size:13px;
+                        color:var(--text-muted);
+                    ">
+                        Sala: ${aluno.sala}
+                    </span>
 
-            <button   
-                class="btn btn-primary"  
-                style="padding: 6px 10px"  
-                onclick="verificarDesempenho(${index})"  
-            >  
-                <i class="fas fa-chart-simple"></i>  
-            </button>  
+                </div>
 
-        </td>  
+            </td>
 
-    </tr>  
-      
-    `;  
+            <td style="
+                text-align:right;
+                white-space:nowrap;
+            ">
 
-});
+                <button
+                    class="btn btn-ghost"
+                    style="padding:6px 10px"
+                    onclick="editarAluno(${index})"
+                >
+                    <i class="fas fa-edit"></i>
+                </button>
 
-}
+                <button
+                    class="btn btn-ghost"
+                    style="
+                        padding:6px 10px;
+                        color:var(--danger)
+                    "
+                    onclick="deletarAluno(${index})"
+                >
+                    <i class="fas fa-trash"></i>
+                </button>
+
+                <button
+                    class="btn btn-primary"
+                    style="padding:6px 10px"
+                    onclick="verificarDesempenho(${index})"
+                >
+                    <i class="fas fa-chart-simple"></i>
+                </button>
+
+            </td>
+
+        </tr>
+        
+        `;
+
+    });
+
+  }
 
 /* MODAL */
 

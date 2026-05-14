@@ -582,7 +582,7 @@ try{
     /* BUSCAR TURMA */  
 
     const responseTurma = await fetch(  
-`/.netlify/functions/turma?codigoAluno=${codigoAluno}`,  
+`https://representa-api.onrender.com/turma?codigoAluno=${codigoAluno}`,  
 {  
     method:"GET",  
     headers:{  

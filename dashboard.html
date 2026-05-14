@@ -908,7 +908,7 @@ document
 
 }
 
-  async function buscarRooms(token){
+  async function buscarRooms(token, nick){
 
     try{
 
@@ -918,69 +918,90 @@ document
                 method:"GET",
                 headers:{
                     "Accept":"application/json",
-                    "x-api-key":token
+                    "Authorization":"Bearer " + token
                 }
             }
         );
 
-        const data = await response.json();
+        console.log("STATUS ROOMS:", response.status);
 
-        console.log("ROOM RESPONSE:", data);
+        /* SE DER ERRO NÃO QUEBRA O SISTEMA */
 
-        if(!Array.isArray(data)){
+        if(!response.ok){
+
+            console.log("Falha ao buscar rooms");
 
             return [];
 
         }
 
+        const finalUrl = response.url;
+
+        console.log("URL FINAL:", finalUrl);
+
+        const url = new URL(finalUrl);
+
+        const targets =
+            url.searchParams.getAll(
+                "publication_target"
+            );
+
+        console.log("TARGETS:", targets);
+
         const roomsMap = {};
 
-        data.forEach(item => {
+        targets.forEach(target => {
 
-            const roomName =
-                item.publication_target;
-
-            const categoryId =
-                item.group_category_id;
-
-            if(!roomName){
+            if(target.includes(":")){
                 return;
             }
 
-            if(!roomsMap[roomName]){
-
-                roomsMap[roomName] = {
-
-                    name: roomName,
-
-                    group_categories: []
-
-                };
-
+            if(/^\d+$/.test(target)){
+                return;
             }
 
-            if(categoryId){
+            if(!roomsMap[target]){
 
-                roomsMap[roomName]
-                    .group_categories
-                    .push({
-                        id: categoryId
-                    });
+                roomsMap[target] = {
+                    name: target,
+                    group_categories:[]
+                };
 
             }
 
         });
 
-        const rooms =
-            Object.values(roomsMap);
+        targets.forEach(target => {
 
-        console.log("ROOMS:", rooms);
+            if(/^\d+$/.test(target)){
 
-        return rooms;
+                const firstRoom =
+                    Object.keys(roomsMap)[0];
+
+                if(firstRoom){
+
+                    roomsMap[firstRoom]
+                        .group_categories
+                        .push({
+                            id: target
+                        });
+
+                }
+
+            }
+
+        });
+
+        return Object.values(
+            roomsMap
+        );
 
     }catch(error){
 
-        console.error(error);
+        console.error(
+            "ERRO ROOMS:",
+            error
+        );
 
         return [];
 

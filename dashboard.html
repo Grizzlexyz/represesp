@@ -1374,31 +1374,198 @@ alunos.push({
 
 function editarAluno(index){
 
-const novoRA = prompt(  
-    "Novo RA:",  
-    alunos[index].ra  
-);  
+    const aluno = alunos[index];
 
-if(!novoRA) return;  
+    const raCompleto =
+        aluno.ra || "";
 
-const novaSala = prompt(  
-    "Nova sala:",  
-    alunos[index].sala  
-);  
+    const raBase =
+        raCompleto.slice(0, -3);
 
-if(!novaSala) return;  
+    const digito =
+        raCompleto.slice(-3, -2);
 
-alunos[index].ra = novoRA;  
-alunos[index].sala = novaSala;  
+    const uf =
+        raCompleto.slice(-2);
 
-localStorage.setItem(  
-    "alunos",  
-    JSON.stringify(alunos)  
-);  
+    const modalExistente =
+        document.getElementById(
+            "editarAlunoModal"
+        );
 
-renderizarAlunos();
+    if(modalExistente){
 
-}
+        modalExistente.remove();
+
+    }
+
+    const modal = document.createElement("div");
+
+    modal.id = "editarAlunoModal";
+
+    modal.className =
+        "modal-overlay active";
+
+    modal.innerHTML = `
+
+    <div class="modal">
+
+        <h3>
+            Editar Aluno
+        </h3>
+
+        <p class="modal-subtitle">
+            Atualize os dados do aluno.
+        </p>
+
+        <div class="form-group">
+
+            <label>
+                RA
+            </label>
+
+            <div class="form-row">
+
+                <input
+                    type="text"
+                    id="editar-ra"
+                    class="form-input"
+                    value="${raBase}"
+                >
+
+                <input
+                    type="text"
+                    id="editar-digito"
+                    class="form-input"
+                    maxlength="1"
+                    value="${digito}"
+                    style="
+                        max-width:70px;
+                        text-align:center;
+                        padding:0;
+                    "
+                >
+
+                <select
+                    id="editar-uf"
+                    class="form-select"
+                >
+
+                    <option value="SP">
+                        SP
+                    </option>
+
+                    <option value="RJ">
+                        RJ
+                    </option>
+
+                    <option value="MG">
+                        MG
+                    </option>
+
+                    <option value="PR">
+                        PR
+                    </option>
+
+                    <option value="RS">
+                        RS
+                    </option>
+
+                </select>
+
+            </div>
+
+        </div>
+
+        <div class="form-group">
+
+            <label>
+                Senha
+            </label>
+
+            <input
+                type="text"
+                id="editar-senha"
+                class="form-input"
+                value="${aluno.senha || ""}"
+            >
+
+        </div>
+
+        <button
+            class="btn btn-primary modal-btn"
+            id="salvar-edicao"
+        >
+            Salvar
+        </button>
+
+        <button
+            class="btn btn-ghost close-btn modal-btn"
+            id="cancelar-edicao"
+        >
+            Cancelar
+        </button>
+
+    </div>
+
+    `;
+
+    document.body.appendChild(modal);
+
+    document.getElementById(
+        "editar-uf"
+    ).value = uf;
+
+    document.getElementById(
+        "cancelar-edicao"
+    ).onclick = () => {
+
+        modal.remove();
+
+    };
+
+    document.getElementById(
+        "salvar-edicao"
+    ).onclick = () => {
+
+        const novoRa =
+            document.getElementById(
+                "editar-ra"
+            ).value.trim();
+
+        const novoDigito =
+            document.getElementById(
+                "editar-digito"
+            ).value.trim();
+
+        const novaUf =
+            document.getElementById(
+                "editar-uf"
+            ).value.trim();
+
+        const novaSenha =
+            document.getElementById(
+                "editar-senha"
+            ).value.trim();
+
+        alunos[index].ra =
+            `${novoRa}${novoDigito}${novaUf}`;
+
+        alunos[index].senha =
+            novaSenha;
+
+        localStorage.setItem(
+            "alunos",
+            JSON.stringify(alunos)
+        );
+
+        renderizarAlunos();
+
+        modal.remove();
+
+    };
+
+  }
 
 /* DELETAR */
 

@@ -906,7 +906,7 @@ document
 
 }
 
-  async function buscarRooms(token, nick){
+  async function buscarRooms(token){
 
     try{
 
@@ -921,70 +921,60 @@ document
             }
         );
 
-        const finalUrl = response.url;
+        const data = await response.json();
 
-        console.log("URL FINAL:", finalUrl);
+        console.log("ROOM RESPONSE:", data);
 
-        const url = new URL(finalUrl);
+        if(!Array.isArray(data)){
 
-        const targets =
-            url.searchParams.getAll(
-                "publication_target"
-            );
+            return [];
 
-        console.log(targets);
+        }
 
         const roomsMap = {};
 
-        targets.forEach(target => {
+        data.forEach(item => {
 
-            /* IGNORA ROOM:NICK */
+            const roomName =
+                item.publication_target;
 
-            if(target.includes(":")){
+            const categoryId =
+                item.group_category_id;
+
+            if(!roomName){
                 return;
             }
 
-            /* IGNORA IDS NUMÉRICOS */
+            if(!roomsMap[roomName]){
 
-            if(/^\d+$/.test(target)){
-                return;
-            }
+                roomsMap[roomName] = {
 
-            if(!roomsMap[target]){
+                    name: roomName,
 
-                roomsMap[target] = {
-                    name: target,
-                    group_categories:[]
+                    group_categories: []
+
                 };
 
             }
 
-        });
+            if(categoryId){
 
-        targets.forEach(target => {
-
-            if(/^\d+$/.test(target)){
-
-                const firstRoom =
-                    Object.keys(roomsMap)[0];
-
-                if(firstRoom){
-
-                    roomsMap[firstRoom]
-                        .group_categories
-                        .push({
-                            id: target
-                        });
-
-                }
+                roomsMap[roomName]
+                    .group_categories
+                    .push({
+                        id: categoryId
+                    });
 
             }
 
         });
 
-        return Object.values(
-            roomsMap
-        );
+        const rooms =
+            Object.values(roomsMap);
+
+        console.log("ROOMS:", rooms);
+
+        return rooms;
 
     }catch(error){
 
@@ -995,6 +985,7 @@ document
     }
 
   }
+  
 /* MOSTRAR / OCULTAR SENHA */
 
 const toggleNovaSenha =

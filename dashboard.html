@@ -1096,10 +1096,7 @@ const payload =
     parseJwt(tokenFinal);
 
 const rooms =
-    await buscarRooms(
-        tokenFinal,
-        payload?.NICKNAME || ""
-    );
+    await buscarRooms(tokenFinal);
 
 console.log(payload);
 

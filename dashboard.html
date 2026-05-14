@@ -701,11 +701,44 @@ alert("Importação aqui.");
 
 /* EDITAR */
 
-function editarAluno(ra){
+function editarAluno(index){
 
-alert("Editar aluno: " + ra);
+    const aluno = alunos[index];
 
-}
+    const raCompleto =
+        aluno.ra || "";
+
+    const raBase =
+        raCompleto.slice(0, -3);
+
+    const digito =
+        raCompleto.slice(-3, -2);
+
+    const uf =
+        raCompleto.slice(-2);
+
+    document.getElementById(
+        "novo-ra"
+    ).value = raBase;
+
+    document.getElementById(
+        "novo-digito"
+    ).value = digito;
+
+    document.getElementById(
+        "nova-uf"
+    ).value = uf;
+
+    document.getElementById(
+        "nova-senha"
+    ).value =
+        aluno.senha || "";
+
+    abrirModalAluno();
+
+    window.alunoEditando = index;
+
+  }
 
 /* DELETAR */
 

@@ -728,7 +728,7 @@ async function verificarDesempenho(index){
         });
 
         const response = await fetch(
-            `/.netlify/functions/tarefas?${params.toString()}`,
+            `https://representa-api.onrender.com/tarefas?${params.toString()}`,
             {
                 method:"GET"
             }

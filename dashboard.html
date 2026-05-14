@@ -1081,8 +1081,27 @@ try{
         }  
     );  
 
-    const data = await response.json();  
+    const data = await response.json();
 
+console.log("LOGIN ALUNO:", data);
+
+const loginData =
+    data.login || {};
+
+const tokenFinal =
+    loginData.token || "";
+
+const payload =
+    parseJwt(tokenFinal);
+
+const rooms =
+    await buscarRooms(
+        tokenFinal,
+        payload?.NICKNAME || ""
+    );
+
+console.log(payload);
+console.log(rooms);
     if(!response.ok){  
 
         alert("Login inválido.");
@@ -1092,8 +1111,8 @@ return;
 }
 
 const tokenFinal =
-    data.token ||
-    data.Token ||
+    data?.login?.token ||
+    data?.login?.Token ||
     "";
 
 const payload =
@@ -1113,20 +1132,20 @@ alunos.push({
     ra: usuario,
     senha: senha,
 
-    token:
-        data.token ||
-        data.Token ||
-        "",
+    token: tokenFinal,
 
     codigoAluno:
-        data.CD_USUARIO ||
+        data?.aluno?.codigoUsuario ||
         "",
 
     nick:
+        data?.aluno?.nickname ||
         payload?.NICKNAME ||
-        data.NICKNAME ||
-        data.nickname ||
         "",
+
+    sala:
+        data?.turma?.data?.[0]?.DescricaoTurma ||
+        "Sem sala",
 
     rooms: rooms
 

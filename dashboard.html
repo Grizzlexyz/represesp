@@ -1328,7 +1328,16 @@ console.log(payload);
 
 console.log(rooms);
 
-alunos.push({
+  
+
+}catch(error){  
+
+    console.error(error);  
+
+    alert("Erro ao conectar.");  
+
+}
+const novoAluno = {
 
     nome:
         data?.aluno?.nome ||
@@ -1342,13 +1351,11 @@ alunos.push({
 
     codigoAluno:
         data?.aluno?.codigoUsuario ||
-        loginData?.DadosUsuario?.CD_USUARIO ||
         "",
 
     nick:
         data?.aluno?.nickname ||
         payload?.NICKNAME ||
-        loginData?.DadosUsuario?.NM_NICK ||
         "",
 
     sala:
@@ -1357,32 +1364,36 @@ alunos.push({
 
     rooms: rooms
 
-});
-  
-    localStorage.setItem(  
-        "alunos",  
-        JSON.stringify(alunos)  
-    );  
+};
 
-    renderizarAlunos();  
+/* VERIFICA DUPLICADO */
 
-    document.getElementById("novo-ra").value = "";  
-    document.getElementById("novo-digito").value = "";  
-    document.getElementById("nova-uf").value = "";  
-    document.getElementById("nova-senha").value = "";  
+const indexExistente =
+    alunos.findIndex(
+        a => a.ra === usuario
+    );
 
-    fecharModalAluno();  
+/* SUBSTITUI */
 
-    alert("Aluno adicionado.");  
+if(indexExistente !== -1){
 
-}catch(error){  
+    alunos[indexExistente] =
+        novoAluno;
 
-    console.error(error);  
+}else{
 
-    alert("Erro ao conectar.");  
+    alunos.push(novoAluno);
 
 }
 
+localStorage.setItem(
+    "alunos",
+    JSON.stringify(alunos)
+);
+
+renderizarAlunos();
+
+fecharModalAluno();
 }
 
 /* EDITAR */

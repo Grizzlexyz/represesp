@@ -577,67 +577,89 @@ window.location.href = "index.html";
 
 async function carregarDadosAluno(){
 
-try{  
+    try{
 
-    /* BUSCAR TURMA */  
+        const response = await fetch(
+            "https://representa-api.onrender.com/loginAluno",
+            {
+                method:"POST",
+                headers:{
+                    "Content-Type":"application/json",
+                    "Accept":"application/json"
+                },
+                body:JSON.stringify({
+                    user: localStorage.getItem("login"),
+                    senha: localStorage.getItem("senha")
+                })
+            }
+        );
 
-    const responseTurma = await fetch(  
-`https://representa-api.onrender.com/turma?codigoAluno=${codigoAluno}`,  
-{  
-    method:"GET",  
-    headers:{  
-        "Authorization":`Bearer ${token}`  
-    }  
-}
+        const data = await response.json();
 
-);
+        console.log("DADOS:", data);
 
-const turmaData = await responseTurma.json();  
+        if(!response.ok){
 
-    console.log("Turma:", turmaData);  
+            throw new Error(
+                data.message || "Erro API"
+            );
 
-    const turma = turmaData.data[0];  
+        }
 
-    /* NOME */  
+        /* NOME */
 
-    const nomeCompleto = localStorage.getItem("nome");  
+        const nomeCompleto =
+            data?.login?.DadosUsuario?.NAME ||
+            "Aluno";
 
-    const primeiroNome = nomeCompleto  
-? nomeCompleto.split(" ")[0]  
-: "Aluno";  
+        const primeiroNome =
+            nomeCompleto.split(" ")[0];
 
-    greeting.textContent = `Olá, ${primeiroNome}!`;  
+        greeting.textContent =
+            `Olá, ${primeiroNome}!`;
 
-    /* TURMA */  
+        /* TURMA */
 
-    turmaInfo.textContent =  
-        `${turma.NumeroSerie}º Ano ${turma.IdentificadorTurma}`;  
+        const turma =
+            data?.turma?.data?.[0];
 
-    /* ESCOLA */  
+        if(turma){
 
-    escolaInfo.textContent =  
-        turma.NomeEscola;  
+            turmaInfo.textContent =
+                `${turma.NumeroSerie}º Ano ${turma.IdentificadorTurma}`;
 
-    /* TÍTULO */  
+            escolaInfo.textContent =
+                turma.NomeEscola || "Sem escola";
 
-    document.title =  
-        `${turma.NumeroSerie}º Ano ${turma.IdentificadorTurma}`;  
+            document.title =
+                `${turma.NumeroSerie}º Ano ${turma.IdentificadorTurma}`;
 
-}catch(error){  
+        }else{
 
-    console.error(error);  
+            turmaInfo.textContent =
+                "Turma não encontrada";
 
-    greeting.textContent = "Erro ao carregar";  
+            escolaInfo.textContent =
+                "Escola não encontrada";
 
-    turmaInfo.textContent =  
-        "Erro ao carregar turma";  
+        }
 
-    escolaInfo.textContent =  
-        "Erro ao carregar escola";  
+    }catch(error){
 
-}
+        console.error(error);
 
-}
+        greeting.textContent =
+            "Erro ao carregar nome";
+
+        turmaInfo.textContent =
+            "Erro ao carregar turma";
+
+        escolaInfo.textContent =
+            "Erro ao carregar escola";
+
+    }
+
+  }
 
 /* INICIAR */
 

@@ -1118,15 +1118,31 @@ const tokenFinal =
 const payload =
     parseJwt(tokenFinal);
 
-const rooms =
-    await buscarRooms(tokenFinal);
+let rooms = [];
+
+try{
+
+    rooms = await buscarRooms(
+        tokenFinal,
+        payload?.NICKNAME || ""
+    );
+
+}catch(error){
+
+    console.log(
+        "Erro ao buscar rooms:",
+        error
+    );
+
+    rooms = [];
+
+}
 
 console.log(payload);
 
 console.log(rooms);
 
 alunos.push({
-
     ra: usuario,
 
     senha: senha,

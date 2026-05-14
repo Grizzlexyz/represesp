@@ -1238,164 +1238,171 @@ function parseJwt(token){
 
 async function adicionarAluno(){
 
-const ra =  
-    document.getElementById("novo-ra")  
-    .value.trim();  
+    const ra =
+        document.getElementById("novo-ra")
+        .value.trim();
 
-const digito =  
-    document.getElementById("novo-digito")  
-    .value.trim();  
+    const digito =
+        document.getElementById("novo-digito")
+        .value.trim();
 
-const uf =  
-    document.getElementById("nova-uf")  
-    .value.trim().toUpperCase();  
+    const uf =
+        document.getElementById("nova-uf")
+        .value.trim()
+        .toUpperCase();
 
-const senha =  
-    document.getElementById("nova-senha")  
-    .value.trim();  
+    const senha =
+        document.getElementById("nova-senha")
+        .value.trim();
 
-if(!ra || !digito || !uf || !senha){  
+    if(!ra || !digito || !uf || !senha){
 
-    alert("Preencha todos os campos.");  
-    return;  
+        alert("Preencha todos os campos.");
 
-}  
+        return;
 
-const usuario =  
-    `${ra}${digito}${uf}`;  
+    }
 
-try{  
+    const usuario =
+        `${ra}${digito}${uf}`;
 
-    const response = await fetch(  
-        "https://representa-api.onrender.com/loginAluno",  
-        {  
-            method:"POST",  
-            headers:{  
-                "Content-Type":"application/json",  
-                "Accept":"application/json"  
-            },  
-            body:JSON.stringify({  
-                user:usuario,  
-                senha:senha  
-            })  
-        }  
-    );  
+    try{
 
-    const data = await response.json();
+        const response = await fetch(
+            "https://representa-api.onrender.com/loginAluno",
+            {
+                method:"POST",
+                headers:{
+                    "Content-Type":"application/json",
+                    "Accept":"application/json"
+                },
+                body:JSON.stringify({
+                    user:usuario,
+                    senha:senha
+                })
+            }
+        );
 
-console.log("LOGIN ALUNO:", data);
+        const data =
+            await response.json();
 
-if(!response.ok){
+        console.log(
+            "LOGIN ALUNO:",
+            data
+        );
 
-    alert("Login inválido.");
+        if(!response.ok){
 
-    console.log(data);
+            alert("Login inválido.");
 
-    return;
+            console.log(data);
 
-}
+            return;
 
-const loginData =
-    data?.login || {};
+        }
 
-const tokenFinal =
-    loginData?.token || "";
+        const loginData =
+            data?.login || {};
 
-const payload =
-    parseJwt(tokenFinal);
+        const tokenFinal =
+            loginData?.token || "";
 
-let rooms = [];
+        const payload =
+            parseJwt(tokenFinal);
 
-try{
+        let rooms = [];
 
-    rooms = await buscarRooms(
-        tokenFinal,
-        payload?.NICKNAME || ""
-    );
+        try{
 
-}catch(error){
+            rooms = await buscarRooms(
+                tokenFinal,
+                payload?.NICKNAME || ""
+            );
 
-    console.log(
-        "Erro ao buscar rooms:",
-        error
-    );
+        }catch(error){
 
-    rooms = [];
+            console.log(
+                "Erro ao buscar rooms:",
+                error
+            );
 
-}
+            rooms = [];
 
-console.log(payload);
+        }
 
-console.log(rooms);
+        console.log(payload);
 
-  
+        console.log(rooms);
 
-}catch(error){  
+        const novoAluno = {
 
-    console.error(error);  
+            nome:
+                data?.aluno?.nome ||
+                "Aluno",
 
-    alert("Erro ao conectar.");  
+            ra: usuario,
 
-}
-const novoAluno = {
+            senha: senha,
 
-    nome:
-        data?.aluno?.nome ||
-        "Aluno",
+            token: tokenFinal,
 
-    ra: usuario,
+            codigoAluno:
+                data?.aluno?.codigoUsuario ||
+                "",
 
-    senha: senha,
+            nick:
+                data?.aluno?.nickname ||
+                payload?.NICKNAME ||
+                "",
 
-    token: tokenFinal,
+            sala:
+                data?.turma?.data?.[0]
+                ?.DescricaoTurma ||
+                "Sem sala",
 
-    codigoAluno:
-        data?.aluno?.codigoUsuario ||
-        "",
+            rooms: rooms
 
-    nick:
-        data?.aluno?.nickname ||
-        payload?.NICKNAME ||
-        "",
+        };
 
-    sala:
-        data?.turma?.data?.[0]?.DescricaoTurma ||
-        "Sem sala",
+        /* VERIFICA DUPLICADO */
 
-    rooms: rooms
+        const indexExistente =
+            alunos.findIndex(
+                a => a.ra === usuario
+            );
 
-};
+        /* SUBSTITUI */
 
-/* VERIFICA DUPLICADO */
+        if(indexExistente !== -1){
 
-const indexExistente =
-    alunos.findIndex(
-        a => a.ra === usuario
-    );
+            alunos[indexExistente] =
+                novoAluno;
 
-/* SUBSTITUI */
+        }else{
 
-if(indexExistente !== -1){
+            alunos.push(novoAluno);
 
-    alunos[indexExistente] =
-        novoAluno;
+        }
 
-}else{
+        localStorage.setItem(
+            "alunos",
+            JSON.stringify(alunos)
+        );
 
-    alunos.push(novoAluno);
+        renderizarAlunos();
 
-}
+        fecharModalAluno();
 
-localStorage.setItem(
-    "alunos",
-    JSON.stringify(alunos)
-);
+    }catch(error){
 
-renderizarAlunos();
+        console.error(error);
 
-fecharModalAluno();
-}
+        alert("Erro ao conectar.");
 
+    }
+
+    }
+    
 /* EDITAR */
 
 function editarAluno(index){

@@ -775,9 +775,13 @@ async function verificarDesempenho(index){
 
     try{
 
-        document.getElementById("pendencias").textContent = "...";
+        document.getElementById(
+            "pendencias"
+        ).textContent = "...";
 
-        document.getElementById("expiradas").textContent = "...";
+        document.getElementById(
+            "expiradas"
+        ).textContent = "...";
 
         document
             .getElementById("statsModal")
@@ -785,71 +789,521 @@ async function verificarDesempenho(index){
 
         const aluno = alunos[index];
 
-        const params = new URLSearchParams({
+        if(
+            !aluno ||
+            !aluno.token ||
+            !aluno.rooms
+        ){
 
-            authToken: aluno.token,
+            throw new Error(
+                "Aluno sem token ou rooms."
+            );
 
-            nick: aluno.nick,
+        }
 
-            rooms: JSON.stringify(
-                aluno.rooms
-            ),
+        /* PUBLICATION TARGETS */
 
-            expired: "false"
+        const targets = [];
+
+        aluno.rooms.forEach(room => {
+
+            if(room?.name){
+
+                targets.push(room.name);
+
+                if(aluno.nick){
+
+                    targets.push(
+                        `${room.name}:${aluno.nick}`
+                    );
+
+                }
+
+            }
+
+            if(
+                Array.isArray(
+                    room.group_categories
+                )
+            ){
+
+                room.group_categories
+                .forEach(cat => {
+
+                    targets.push(
+                        String(cat)
+                    );
+
+                });
+
+            }
 
         });
 
-        const response = await fetch(
-            `https://representa-api.onrender.com/tarefas?${params.toString()}`,
-            {
-                method:"GET"
-            }
+        /* REMOVE DUPLICADOS */
+
+        const publicationTargets =
+            [...new Set(targets)];
+
+        /* QUERY */
+
+        const criarQuery = (
+            expiredOnly,
+            filterExpired
+        ) => {
+
+            const params =
+                new URLSearchParams();
+
+            params.append(
+                "expired_only",
+                expiredOnly
+            );
+
+            params.append(
+                "limit",
+                "100"
+            );
+
+            params.append(
+                "offset",
+                "0"
+            );
+
+            params.append(
+                "filter_expired",
+                filterExpired
+            );
+
+            params.append(
+                "is_exam",
+                "false"
+            );
+
+            params.append(
+                "with_answer",
+                "true"
+            );
+
+            params.append(
+                "is_essay",
+                "false"
+            );
+
+            params.append(
+                "answer_statuses",
+                "draft"
+            );
+
+            params.append(
+                "with_apply_moment",
+                "true"
+            );
+
+            publicationTargets
+            .forEach(target => {
+
+                params.append(
+                    "publication_target",
+                    target
+                );
+
+            });
+
+            return params.toString();
+
+        };
+
+        /* PENDENTES */
+
+        const pendentesUrl =
+            "https://edusp-api.ip.tv/tms/task/todo?" +
+            criarQuery(
+                "false",
+                "true"
+            );
+
+        /* EXPIRADAS */
+
+        const expiradasUrl =
+            "https://edusp-api.ip.tv/tms/task/todo?" +
+            criarQuery(
+                "true",
+                "false"
+            );
+
+        console.log(
+            "URL PENDENTES:",
+            pendentesUrl
         );
 
-        const data = await response.json();
+        console.log(
+            "URL EXPIRADAS:",
+            expiradasUrl
+        );
 
-        console.log(data);
+        /* FETCH */
 
-        const tarefas =
-    Array.isArray(data?.data)
-    ? data.data
-    : Array.isArray(data)
-    ? data
-    : [];
+        const [
+            pendentesResponse,
+            expiradasResponse
+        ] = await Promise.all([
 
-        const pendentes =
-            tarefas.filter(t =>
-                !t.expired
-            ).length;
+            fetch(
+                pendentesUrl,
+                {
+                    method:"GET",
+                    headers:{
+                        "Accept":"application/json",
+                        "Content-Type":"application/json",
+                        "x-api-key": aluno.token
+                    }
+                }
+            ),
 
-        const expiradas =
-            tarefas.filter(t =>
-                t.expired
-            ).length;
+            fetch(
+                expiradasUrl,
+                {
+                    method:"GET",
+                    headers:{
+                        "Accept":"application/json",
+                        "Content-Type":"application/json",
+                        "x-api-key": aluno.token
+                    }
+                }
+            )
 
-        document
-            .getElementById("pendencias")
-            .textContent = pendentes;
+        ]);
 
-        document
-            .getElementById("expiradas")
-            .textContent = expiradas;
+        const pendentesData =
+            await pendentesResponse.json();
+
+        const expiradasData =
+            await expiradasResponse.json();
+
+        console.log(
+            "PENDENTES:",
+            pendentesData
+        );
+
+        console.log(
+            "EXPIRADAS:",
+            expiradasData
+        );
+
+        /* TOTAL */
+
+        const totalPendentes =
+            Array.isArray(
+                pendentesData
+            )
+            ? pendentesData.length
+            : 0;
+
+        const totalExpiradas =
+            Array.isArray(
+                expiradasData
+            )
+            ? expiradasData.length
+            : 0;
+
+        /* MOSTRAR */
+
+        document.getElementById(
+            "pendencias"
+        ).textContent =
+            totalPendentes;
+
+        document.getElementById(
+            "expiradas"
+        ).textContent =
+            totalExpiradas;
 
     }catch(error){
 
-        console.error(error);
+        console.error(
+            "ERRO STATUS:",
+            error
+        );
 
-        document
-            .getElementById("pendencias")
-            .textContent = "Erro";
+        document.getElementById(
+            "pendencias"
+        ).textContent = "Erro";
 
-        document
-            .getElementById("expiradas")
-            .textContent = "Erro";
+        document.getElementById(
+            "expiradas"
+        ).textContent = "Erro";
 
     }
 
-  }
+    /* MODAL ESTATÍSTICAS */
+
+async function verificarDesempenho(index){
+
+    try{
+
+        document.getElementById(
+            "pendencias"
+        ).textContent = "...";
+
+        document.getElementById(
+            "expiradas"
+        ).textContent = "...";
+
+        document
+            .getElementById("statsModal")
+            .classList.add("active");
+
+        const aluno = alunos[index];
+
+        if(
+            !aluno ||
+            !aluno.token ||
+            !aluno.rooms
+        ){
+
+            throw new Error(
+                "Aluno sem token ou rooms."
+            );
+
+        }
+
+        /* PUBLICATION TARGETS */
+
+        const targets = [];
+
+        aluno.rooms.forEach(room => {
+
+            if(room?.name){
+
+                targets.push(room.name);
+
+                if(aluno.nick){
+
+                    targets.push(
+                        `${room.name}:${aluno.nick}`
+                    );
+
+                }
+
+            }
+
+            if(
+                Array.isArray(
+                    room.group_categories
+                )
+            ){
+
+                room.group_categories
+                .forEach(cat => {
+
+                    targets.push(
+                        String(cat)
+                    );
+
+                });
+
+            }
+
+        });
+
+        /* REMOVE DUPLICADOS */
+
+        const publicationTargets =
+            [...new Set(targets)];
+
+        /* QUERY */
+
+        const criarQuery = (
+            expiredOnly,
+            filterExpired
+        ) => {
+
+            const params =
+                new URLSearchParams();
+
+            params.append(
+                "expired_only",
+                expiredOnly
+            );
+
+            params.append(
+                "limit",
+                "100"
+            );
+
+            params.append(
+                "offset",
+                "0"
+            );
+
+            params.append(
+                "filter_expired",
+                filterExpired
+            );
+
+            params.append(
+                "is_exam",
+                "false"
+            );
+
+            params.append(
+                "with_answer",
+                "true"
+            );
+
+            params.append(
+                "is_essay",
+                "false"
+            );
+
+            params.append(
+                "answer_statuses",
+                "draft"
+            );
+
+            params.append(
+                "with_apply_moment",
+                "true"
+            );
+
+            publicationTargets
+            .forEach(target => {
+
+                params.append(
+                    "publication_target",
+                    target
+                );
+
+            });
+
+            return params.toString();
+
+        };
+
+        /* PENDENTES */
+
+        const pendentesUrl =
+            "https://edusp-api.ip.tv/tms/task/todo?" +
+            criarQuery(
+                "false",
+                "true"
+            );
+
+        /* EXPIRADAS */
+
+        const expiradasUrl =
+            "https://edusp-api.ip.tv/tms/task/todo?" +
+            criarQuery(
+                "true",
+                "false"
+            );
+
+        console.log(
+            "URL PENDENTES:",
+            pendentesUrl
+        );
+
+        console.log(
+            "URL EXPIRADAS:",
+            expiradasUrl
+        );
+
+        /* FETCH */
+
+        const [
+            pendentesResponse,
+            expiradasResponse
+        ] = await Promise.all([
+
+            fetch(
+                pendentesUrl,
+                {
+                    method:"GET",
+                    headers:{
+                        "Accept":"application/json",
+                        "Content-Type":"application/json",
+                        "x-api-key": aluno.token
+                    }
+                }
+            ),
+
+            fetch(
+                expiradasUrl,
+                {
+                    method:"GET",
+                    headers:{
+                        "Accept":"application/json",
+                        "Content-Type":"application/json",
+                        "x-api-key": aluno.token
+                    }
+                }
+            )
+
+        ]);
+
+        const pendentesData =
+            await pendentesResponse.json();
+
+        const expiradasData =
+            await expiradasResponse.json();
+
+        console.log(
+            "PENDENTES:",
+            pendentesData
+        );
+
+        console.log(
+            "EXPIRADAS:",
+            expiradasData
+        );
+
+        /* TOTAL */
+
+        const totalPendentes =
+            Array.isArray(
+                pendentesData
+            )
+            ? pendentesData.length
+            : 0;
+
+        const totalExpiradas =
+            Array.isArray(
+                expiradasData
+            )
+            ? expiradasData.length
+            : 0;
+
+        /* MOSTRAR */
+
+        document.getElementById(
+            "pendencias"
+        ).textContent =
+            totalPendentes;
+
+        document.getElementById(
+            "expiradas"
+        ).textContent =
+            totalExpiradas;
+
+    }catch(error){
+
+        console.error(
+            "ERRO STATUS:",
+            error
+        );
+
+        document.getElementById(
+            "pendencias"
+        ).textContent = "Erro";
+
+        document.getElementById(
+            "expiradas"
+        ).textContent = "Erro";
+
+    }
+
+}
 
 /* FECHAR MODAL */
 

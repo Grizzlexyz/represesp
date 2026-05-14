@@ -1085,35 +1085,21 @@ try{
 
 console.log("LOGIN ALUNO:", data);
 
-const loginData =
-    data.login || {};
+if(!response.ok){
 
-const tokenFinal =
-    loginData.token || "";
+    alert("Login inválido.");
 
-const payload =
-    parseJwt(tokenFinal);
+    console.log(data);
 
-const rooms =
-    await buscarRooms(
-        tokenFinal,
-        payload?.NICKNAME || ""
-    );
-
-console.log(payload);
-console.log(rooms);
-    if(!response.ok){  
-
-        alert("Login inválido.");
-console.log(data);
-return;
+    return;
 
 }
 
+const loginData =
+    data?.login || {};
+
 const tokenFinal =
-    data?.login?.token ||
-    data?.login?.Token ||
-    "";
+    loginData?.token || "";
 
 const payload =
     parseJwt(tokenFinal);
@@ -1125,22 +1111,26 @@ const rooms =
     );
 
 console.log(payload);
+
 console.log(rooms);
 
 alunos.push({
 
     ra: usuario,
+
     senha: senha,
 
     token: tokenFinal,
 
     codigoAluno:
         data?.aluno?.codigoUsuario ||
+        loginData?.DadosUsuario?.CD_USUARIO ||
         "",
 
     nick:
         data?.aluno?.nickname ||
         payload?.NICKNAME ||
+        loginData?.DadosUsuario?.NM_NICK ||
         "",
 
     sala:
@@ -1150,7 +1140,7 @@ alunos.push({
     rooms: rooms
 
 });
-
+  
     localStorage.setItem(  
         "alunos",  
         JSON.stringify(alunos)  

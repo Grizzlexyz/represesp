@@ -790,10 +790,10 @@ async function verificarDesempenho(index){
         const aluno = alunos[index];
 
         if(
-            !aluno ||
-            !aluno.token ||
-            !aluno.rooms
-        ){
+    !aluno ||
+    !aluno.authToken ||
+    !aluno.rooms
+){
 
             throw new Error(
                 "Aluno sem token ou rooms."

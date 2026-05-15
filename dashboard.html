@@ -1575,35 +1575,33 @@ const authToken =
 
         const novoAluno = {
 
-            nome:
-                data?.aluno?.nome ||
-                "Aluno",
+    nome:
+        data?.aluno?.nome ||
+        "Aluno",
 
-            ra: usuario,
+    ra: usuario,
 
-            senha: senha,
+    senha: senha,
 
-            token: tokenSed,
+    token: authToken,
 
-authToken: authToken,
+    codigoAluno:
+        data?.aluno?.codigoUsuario ||
+        "",
 
-            codigoAluno:
-                data?.aluno?.codigoUsuario ||
-                "",
+    nick:
+        data?.aluno?.nickname ||
+        payload?.NICKNAME ||
+        "",
 
-            nick:
-                data?.aluno?.nickname ||
-                payload?.NICKNAME ||
-                "",
+    sala:
+        data?.turma?.data?.[0]
+        ?.DescricaoTurma ||
+        "Sem sala",
 
-            sala:
-                data?.turma?.data?.[0]
-                ?.DescricaoTurma ||
-                "Sem sala",
+    rooms: rooms
 
-            rooms: rooms
-
-        };
+};
 
         /* VERIFICA DUPLICADO */
 

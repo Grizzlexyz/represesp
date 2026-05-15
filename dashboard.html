@@ -1491,8 +1491,36 @@ async function adicionarAluno(){
         const loginData =
             data?.login || {};
 
-        const tokenFinal =
-            loginData?.token || "";
+        const tokenSed =
+    loginData?.token || "";
+        /* TOKEN IPTV */
+
+const registroResponse = await fetch(
+    "https://edusp-api.ip.tv/registration/edusp/token",
+    {
+        method:"POST",
+        headers:{
+            "Content-Type":"application/json",
+            "Accept":"application/json",
+            "x-api-realm":"edusp",
+            "x-api-platform":"webclient"
+        },
+        body:JSON.stringify({
+            token: tokenSed
+        })
+    }
+);
+
+const registroData =
+    await registroResponse.json();
+
+console.log(
+    "REGISTRO IPTV:",
+    registroData
+);
+
+const authToken =
+    registroData?.auth_token || "";
 
         const payload =
             parseJwt(tokenFinal);

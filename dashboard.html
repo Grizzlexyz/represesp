@@ -1472,6 +1472,30 @@ async function adicionarAluno(){
 
         const data =
             await response.json();
+        const tokenSed = data.login.token;
+
+const cmsResponse = await fetch(
+    "https://edusp-api.ip.tv/registration/edusp/token",
+    {
+        method:"POST",
+        headers:{
+            "Content-Type":"application/json",
+            "Accept":"application/json",
+            "x-api-realm":"edusp",
+            "x-api-platform":"webclient"
+        },
+        body:JSON.stringify({
+            token: tokenSed
+        })
+    }
+);
+
+const dataCms = await cmsResponse.json();
+
+console.log(
+    "CMS TOKEN:",
+    dataCms
+);
 
         console.log(
             "LOGIN ALUNO:",

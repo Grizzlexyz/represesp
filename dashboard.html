@@ -1,39 +1,20 @@
-<!DOCTYPE html>
-<html lang="pt-BR">
-
-<head>
-
-<meta charset="UTF-8">
-
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>Início</title>
+<!--  
+Arquivo: index.html  
+Ação: create  
+Sugestão de commit:  
+feat: criar página de login e dashboard moderno  
+-->  <!DOCTYPE html>  <html lang="pt-BR">  
+<head>  
+<meta charset="UTF-8" />  
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />  
+<title>Representa SP - Portal do Aluno</title>
 
 <link
     rel="icon"
     type="image/svg+xml"
     href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 256 256'%3E%3Cpath d='M128 28L18 88L128 148L238 88L128 28Z' fill='%236f2cff'/%3E%3Cpath d='M68 118V158C68 182 94 198 128 198C162 198 188 182 188 158V118L128 148L68 118Z' fill='%238d5cff'/%3E%3Cpath d='M212 102V168' stroke='%236f2cff' stroke-width='10' stroke-linecap='round'/%3E%3Ccircle cx='212' cy='178' r='12' fill='%236f2cff'/%3E%3C/svg%3E"
 />
-
-<!-- FONT AWESOME -->
-
-<link
-rel="stylesheet"
-href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
->
-
-<style>  
-  
-:root{  
-    --bg:#f3f3f3;  
-    --card:#ffffff;  
-    --primary:#6f2cff;  
-    --text:#111111;  
-    --text-muted:#666666;  
-    --border:#ececec;  
-    --danger:#ff3b3b;  
-}  
-  
+ <style>  
 *{  
     margin:0;  
     padding:0;  
@@ -41,1932 +22,679 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
     font-family:Arial, sans-serif;  
 }  
   
+  *{
+    -webkit-tap-highlight-color: transparent;
+    user-select:none;
+    -webkit-user-select:none;
+    -webkit-touch-callout:none;
+}
+
+input,
+button,
+textarea,
+select,
+a{
+    outline:none;
+    box-shadow:none;
+}
+
+input:focus,
+button:focus,
+textarea:focus,
+select:focus,
+a:focus{
+    outline:none;
+    box-shadow:none;
+}
+
 body{  
-    background:var(--bg);  
-    padding:20px;  
+    width:100%;  
     min-height:100vh;  
-    color:var(--text);  
-}  
-  
-/* CONTAINER */  
-  
-.container{  
-    width:100%;  
-    max-width:1250px;  
-    margin:auto;  
-}  
-  
-/* HEADER */  
-  
-header{  
-    width:100%;  
-    background:var(--card);  
-    border-radius:28px;  
-    padding:22px;  
+    background:#f3f3f3;  
     display:flex;  
-    align-items:center;  
-    justify-content:space-between;  
-    margin-bottom:20px;  
-    box-shadow:0 8px 30px rgba(0,0,0,0.05);  
-}  
-  
-header h2{  
-    font-size:26px;  
-    margin-bottom:5px;  
-}  
-  
-/* BOTÕES */  
-  
-.btn{  
-    border:none;  
-    cursor:pointer;  
-    transition:0.2s;  
-}  
-  
-.btn:hover{  
-    transform:translateY(-2px);  
-}  
-  
-.btn-primary{  
-    background:var(--primary);  
-    color:#fff;  
-    border-radius:14px;  
-    padding:10px 14px;  
-}  
-  
-.btn-ghost{  
-    background:#f5f5f5;  
-    color:var(--text);  
-    border-radius:14px;  
-    padding:10px 14px;  
-}  
-  
-.theme-btn{  
-    width:45px;  
-    height:45px;  
-    border:none;  
-    border-radius:14px;  
-    background:#f5f5f5;  
-    cursor:pointer;  
-    font-size:18px;  
-}  
-  
-/* CARD */  
-  
-.card{  
-    width:100%;  
-    background:var(--card);  
-    border-radius:28px;  
-    padding:24px;  
-    box-shadow:0 8px 30px rgba(0,0,0,0.05);  
-}  
-  
-/* TABLE */  
-  
-table{  
-    width:100%;  
-    border-collapse:collapse;  
-}  
-  
-thead{  
-    background:#fafafa;  
-}  
-  
-th{  
-    padding:18px;  
-    text-align:left;  
-    font-size:14px;  
-    color:var(--text-muted);  
-    border-bottom:1px solid var(--border);  
-}  
-  
-td{  
-    padding:18px;  
-    border-bottom:1px solid var(--border);  
-}  
-  
-tbody tr{  
-    transition:0.2s;  
-}  
-  
-tbody tr:hover{  
-    background:#fafafa;  
-}  
-  
-/* MODAL */  
-  
-.modal-overlay{  
-    position:fixed;  
-    inset:0;  
-    background:rgba(0,0,0,0.4);  
-    display:none;  
     align-items:center;  
     justify-content:center;  
     padding:20px;  
-    z-index:100;  
 }  
-  
-.modal-overlay.active{  
-    display:flex;  
-}  
-  
-.modal{  
-    width:100%;  
-    max-width:400px;  
-    background:#ffffff;  
-    border-radius:28px;  
-    padding:25px;  
-    animation:fadeIn 0.2s ease;  
-}  
-  
-.modal h3{  
-    margin-bottom:20px;  
-    font-size:22px;  
-}  
-  .modal-subtitle{
-    font-size:14px;
-    color:var(--text-muted);
-    margin-bottom:24px;
-    line-height:1.5;
-}
 
-.form-group{
-    margin-bottom:18px;
-}
+.small-box{
+    width:70px !important;
+    height:55px !important;
 
-.form-group label{
-    display:block;
-    margin-bottom:8px;
-    font-size:14px;
-    font-weight:600;
-    color:var(--text);
-}
-
-.form-input{
-    width:100%;
-    height:55px;
     border:2px solid #e5e5e5;
     border-radius:16px;
-    padding:0 18px;
-    font-size:16px;
-    outline:none;
-    transition:0.3s;
+
     background:#fff;
-    color:#111;
-}
 
-.form-input:focus{
-    border-color:var(--primary);
-}
-
-.form-row{
-    display:flex;
-    gap:10px;
-}
-
-.form-row .form-input{
-    flex:1;
-}
-
-.form-select{
-    width:90px;
-    height:55px;
-    border:2px solid #e5e5e5;
-    border-radius:16px;
-    padding:0 10px;
     font-size:16px;
-    outline:none;
-    background:#fff;
-    color:#111;
-}
-
-.password-wrapper{
-    position:relative;
-}
-
-.toggle-password{
-    position:absolute;
-    right:18px;
-    top:50%;
-    transform:translateY(-50%);
-    background:none;
-    border:none;
-    cursor:pointer;
-    font-size:14px;
-    color:var(--primary);
     font-weight:bold;
+
+    text-align:center;
+
+    padding:0;
+
+    appearance:none;
+    -webkit-appearance:none;
+}
+  
+/* LOGIN */  
+  
+.login-container{
+    width:100%;
+    max-width:420px;
+    background:#ffffff;
+    padding:35px;
+    border-radius:24px;
+    box-shadow:0 10px 35px rgba(0,0,0,0.08);
+
+    overflow: visible;
+    position:relative;
+    z-index:1;
+}  
+
+.graduation-hat{
+    position:absolute;
+
+    top:-18px;
+    right:-10px;
+
+    width:110px;
+    height:110px;
+
+    transform:rotate(18deg);
+
+    pointer-events:none;
+
+    z-index:10;
 }
 
-.modal-btn{
+.graduation-hat svg{
+    width:100%;
+    height:100%;
+    display:block;
+}
+
+.hat-shadow{
+    filter:drop-shadow(0 8px 18px rgba(111,44,255,0.25));
+}
+  
+.logo{  
+    text-align:center;  
+    font-size:28px;  
+    font-weight:bold;  
+    color:#6f2cff;  
+    margin-bottom:30px;  
+}  
+  
+.input-group{  
+    margin-bottom:20px;  
+}  
+  
+.input-group label{  
+    display:block;  
+    margin-bottom:8px;  
+    font-size:14px;  
+    font-weight:600;  
+    color:#333;  
+}  
+  
+.input-group input{  
+    width:100%;  
+    height:55px;  
+    border:2px solid #e5e5e5;  
+    border-radius:16px;  
+    padding:0 18px;  
+    font-size:16px;  
+    outline:none;  
+    transition:0.3s;  
+}  
+  
+.input-group input:focus{  
+    border-color:#6f2cff;  
+}  
+  
+.password-wrapper{  
+    position:relative;  
+}  
+  
+.toggle-password{  
+    position:absolute;  
+    right:18px;  
+    top:50%;  
+    transform:translateY(-50%);  
+    background:none;  
+    border:none;  
+    cursor:pointer;  
+    font-size:14px;  
+    color:#6f2cff;  
+    font-weight:bold;  
+}  
+  
+.login-btn{
     width:100%;
     height:55px;
     border:none;
     border-radius:18px;
+    background:#6f2cff;
+    color:#fff;
     font-size:16px;
     font-weight:bold;
-  }
-  
-.stats-box{  
-    width:100%;  
-    background:#f7f7f7;  
-    border-radius:20px;  
-    padding:18px;  
-    margin-bottom:15px;  
+    cursor:pointer;
+    transition:0.3s;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:8px;
 }  
   
-.stats-label{  
-    font-size:14px;  
-    color:var(--text-muted);  
-    margin-bottom:8px;  
+.login-btn:hover{  
+    opacity:0.9;  
+    transform:translateY(-2px);  
 }  
+.login-arrow{
+    width:22px;
+    height:22px;
+    color:#fff;
+
+    flex-shrink:0;
+}
   
-.stats-value{  
-    font-size:26px;  
+  /* UF DROPDOWN */
+
+.uf-wrapper{
+    position:relative;
+    width:90px;
+}
+
+.uf-button{
+    width:100%;
+    height:55px;
+    border:2px solid #e5e5e5;
+    border-radius:16px;
+    background:#fff;
+    font-size:16px;
+    font-weight:bold;
+    cursor:pointer;
+    transition:0.3s;
+}
+
+.uf-button:hover{
+    border-color:#6f2cff;
+}
+
+.uf-dropdown{
+    position:absolute;
+    top:65px;
+    left:0;
+    width:100%;
+
+    background:#fff;
+    border-radius:18px;
+    padding:8px;
+
+    display:none;
+    flex-direction:column;
+    gap:8px;
+
+    box-shadow:0 10px 35px rgba(0,0,0,0.08);
+
+    z-index:9999;
+}
+
+.uf-item{
+    width:100%;
+    height:42px;
+    border:none;
+    border-radius:12px;
+    background:#f5f5f5;
+    font-size:15px;
+    font-weight:bold;
+    cursor:pointer;
+    transition:0.2s;
+}
+
+.uf-item:hover{
+    background:#6f2cff;
+    color:#fff;
+}
+  
+.loading{  
+    display:none;  
+    margin-top:15px;  
+    text-align:center;  
+    color:#6f2cff;  
     font-weight:bold;  
 }  
   
-.close-btn{  
-    width:100%;  
-    margin-top:10px;  
-}  
-  
-/* ANIMAÇÃO */  
-  
-@keyframes fadeIn{  
-  
-    from{  
-        opacity:0;  
-        transform:translateY(10px);  
-    }  
-  
-    to{  
-        opacity:1;  
-        transform:translateY(0);  
-    }  
-  
-}  
-  
-/* RESPONSIVO */  
-  
-@media(max-width:768px){  
-  
-    header{  
-        flex-direction:column;  
-        gap:20px;  
-        align-items:flex-start;  
-    }  
-  
-    table{  
-        min-width:700px;  
-    }  
-  
-}  
-  
-.hidden{  
+.error-message{  
     display:none;  
+    margin-top:15px;  
+    text-align:center;  
+    color:#ff3b3b;  
+    font-size:14px;  
+    font-weight:bold;  
 }  
-  
 </style>  </head>  
-<body>  <div class="container">  <!-- HEADER -->  
+<body>  <!-- LOGIN -->  <div class="login-container" id="loginContainer"> <div class="graduation-hat">
 
-<header>  
+    <svg
+        class="hat-shadow"
+        xmlns="http://www.w3.org/2000/svg"
+        viewBox="0 0 256 256"
+        fill="none"
+    >
 
-    <div>  
-        <h2 id="greeting">  
-Carregando...
+        <!-- TOPO -->
 
-</h2>  <p   
-id="turma-info"  
-style="  
-    color: var(--text-muted);  
-    font-size: 14px;  
-    margin-top: 4px;  
-"
+        <path
+            d="M128 28L18 88L128 148L238 88L128 28Z"
+            fill="#6f2cff"
+        />
 
-> 
+        <!-- BASE -->
 
-Carregando turma...
+        <path
+            d="M68 118V158C68 182 94 198 128 198C162 198 188 182 188 158V118L128 148L68 118Z"
+            fill="#8d5cff"
+        />
 
-</p>  <p   
-    id="escola-info"  
-    style="  
-        color: var(--text-muted);  
-        font-size: 13px;  
-        margin-top: 6px;  
-    "  
->  
-    Carregando escola...  
-</p>  
-        </div>  <div style="display: flex; gap: 10px;">  
-  
-        <button class="btn btn-ghost" id="btn-logout" onclick="logout()">  
-            <i class="fas fa-sign-out-alt"></i>  
-        </button>  
+        <!-- FITA -->
 
-    </div>  
+        <path
+            d="M212 102V168"
+            stroke="#6f2cff"
+            stroke-width="10"
+            stroke-linecap="round"
+        />
 
-</header>  
+        <!-- BOLINHA -->
 
-<!-- CARD -->  
+        <circle
+            cx="212"
+            cy="178"
+            r="12"
+            fill="#6f2cff"
+        />
 
-<div class="card">  
+    </svg>
 
-    <div style="display: flex; gap: 8px;">  
+</div> <div class="logo">  
+    Representa <span style="color:#000;">SP</span>  
+</div>  
 
-<button class="btn btn-ghost" onclick="exportarDados()">  
-    <i class="fas fa-download"></i>  
-</button>  
+<form id="loginForm">  
 
-<button class="btn btn-ghost" onclick="document.getElementById('import-file').click()">  
-    <i class="fas fa-upload"></i>  
-</button>  
+    <div class="input-group">  
 
-<button class="btn btn-primary" onclick="abrirModalAluno()">  
-    <i class="fas fa-plus"></i>  
-</button>  
+<label>RA</label>  
+
+<div style="display:flex; gap:10px;">
+
+
+<!-- RA -->  
 
 <input   
-    type="file"   
-    id="import-file"   
-    class="hidden"   
-    accept=".json"   
-    onchange="importarDados(event)"  
+    type="text"  
+    id="ra"  
+    placeholder="RA"  
+    style="flex:1;"  
 >  
 
-    </div>  
+<!-- DÍGITO -->  
 
-    <div style="overflow-x: auto;">  
+<input   
+    type="text"  
+    id="digito"  
+    placeholder="0"  
+    maxlength="1"  
+    class="small-box"
+>
 
-        <table>  
+<!-- UF -->
 
-            <thead>  
+<div class="uf-wrapper">
 
-                <tr>  
-                     <th>Nome</th>
+    <button
+        type="button"
+        class="uf-button"
+        id="ufButton"
+    >
+        SP
+    </button>
 
-<th>Sala</th>
+    <div
+        class="uf-dropdown"
+        id="ufDropdown"
+    >
 
-<th style="text-align:right;">
-    Ações
-</th> 
-                </tr>  
-
-            </thead>  
-
-            <tbody id="corpo-tabela">  
-
-                <!-- ALUNO -->  
-
-            </tbody>  
-
-        </table>  
-
-    </div>  
-
-</div>
-
-</div>  <!-- MODAL -->  <div class="modal-overlay" id="statsModal">  <div class="modal">  
-
-    <h3>  
-        Estatísticas  
-    </h3>  
-
-    <div class="stats-box">  
-
-        <div class="stats-label">  
-            Pendências  
-        </div>  
-
-        <div class="stats-value" id="pendencias">  
-            X  
-        </div>  
-
-    </div>  
-
-    <div class="stats-box">  
-
-        <div class="stats-label">  
-            Expiradas  
-        </div>  
-
-        <div class="stats-value" id="expiradas">  
-            X  
-        </div>  
-
-    </div>  
-
-    <button class="btn btn-primary close-btn" onclick="fecharModal()">  
-        Fechar  
-    </button>  
-
-</div>
-
-</div>  <!-- MODAL ADICIONAR ALUNO -->  <div class="modal-overlay" id="alunoModal">
-
-<div class="modal">
-
-    <h3>
-        Adicionar Aluno
-    </h3>
-
-    <p class="modal-subtitle">
-        Adicione um novo aluno utilizando
-        RA, dígito, UF e senha.
-    </p>
-
-    <!-- RA -->
-
-    <div class="form-group">
-
-        <label>
-            RA
-        </label>
-
-        <div class="form-row">
-
-            <input
-                type="text"
-                id="novo-ra"
-                class="form-input"
-                placeholder="RA"
-            >
-
-            <input
-                type="text"
-                id="novo-digito"
-                class="form-input"
-                placeholder="0"
-                maxlength="1"
-                style="
-                    max-width:70px;
-                    text-align:center;
-                    padding:0;
-                "
-            >
-
-            <select
-                id="nova-uf"
-                class="form-select"
-            >
-                <option value="SP">SP</option>
-                <option value="RJ">RJ</option>
-                <option value="MG">MG</option>
-                <option value="PR">PR</option>
-                <option value="RS">RS</option>
-            </select>
-
-        </div>
+        <button type="button" class="uf-item">SP</button>
+        <button type="button" class="uf-item">RJ</button>
+        <button type="button" class="uf-item">MG</button>
+        <button type="button" class="uf-item">PR</button>
+        <button type="button" class="uf-item">RS</button>
 
     </div>
 
-    <!-- SENHA -->
+</div>
 
-    <div class="form-group">
-
-        <label>
-            Senha
-        </label>
-
-        <div class="password-wrapper">
-
-            <input
-                type="password"
-                id="nova-senha"
-                class="form-input"
-                placeholder="Digite a senha"
-            >
+</div>  
+</div>  
+        <div class="input-group">  
+            <label>Senha</label>  <div class="password-wrapper">  
+            <input   
+                type="password"   
+                id="senha"  
+                placeholder="Digite sua senha"
+            >  
 
             <button
-                type="button"
-                class="toggle-password"
-                id="toggleNovaSenha"
-            >
-                Mostrar
-            </button>
+    type="button"
+    class="toggle-password"
+    id="togglePassword"
+>
 
-        </div>
+    <!-- OLHO ABERTO -->
 
-    </div>
-
-    <!-- BOTÕES -->
-
-    <button
-        class="btn btn-primary modal-btn"
-        onclick="adicionarAluno()"
+    <svg
+        id="eyeOpen"
+        xmlns="http://www.w3.org/2000/svg"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="1.8"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        width="22"
+        height="22"
     >
-        Salvar
-    </button>
+        <path d="M2 12s3.5-6 10-6 10 6 10 6-3.5 6-10 6-10-6-10-6Z"/>
+        <circle cx="12" cy="12" r="3"/>
+    </svg>
 
-    <button
-        class="btn btn-ghost close-btn modal-btn"
-        onclick="fecharModalAluno()"
+    <!-- OLHO FECHADO -->
+
+    <svg
+        id="eyeClosed"
+        xmlns="http://www.w3.org/2000/svg"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="1.8"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        width="22"
+        height="22"
+        style="display:none;"
     >
-        Cancelar
-    </button>
-
-</div>
-
-</div>
-<script>  
-    /* =========================================  
-DADOS DO LOGIN  
-========================================= */  const token = localStorage.getItem("token");
-const codigoAluno = localStorage.getItem("codigoAluno");
-
-/* ELEMENTOS */
-
-const greeting = document.getElementById("greeting");
-
-const turmaInfo = document.getElementById("turma-info");
-
-const escolaInfo = document.getElementById("escola-info");
-
-/* API */
-
-if(!token || !codigoAluno){
-
-alert("Login não encontrado.");  
-
-window.location.href = "index.html";
-
-}
-
-/* CARREGAR DADOS */
-
-async function carregarDadosAluno(){
-
-    try{
-
-        const response = await fetch(
-            "https://representa-api.onrender.com/loginAluno",
-            {
-                method:"POST",
-                headers:{
-                    "Content-Type":"application/json",
-                    "Accept":"application/json"
-                },
-                body:JSON.stringify({
-                    user: localStorage.getItem("login"),
-                    senha: localStorage.getItem("senha")
-                })
-            }
-        );
-
-        const data = await response.json();
-
-        console.log("DADOS:", data);
-
-        if(!response.ok){
-
-            throw new Error(
-                data.message || "Erro API"
-            );
-
-        }
-
-        /* NOME */
-
-        const nomeCompleto =
-            data?.login?.DadosUsuario?.NAME ||
-            "Aluno";
-
-        const primeiroNome =
-            nomeCompleto.split(" ")[0];
-
-        greeting.textContent =
-            `Olá, ${primeiroNome}!`;
-
-        /* TURMA */
-
-        const turma =
-            data?.turma?.data?.[0];
-
-        if(turma){
-
-            turmaInfo.textContent =
-                `${turma.NumeroSerie}º Ano ${turma.IdentificadorTurma}`;
-
-            escolaInfo.textContent =
-                turma.NomeEscola || "Sem escola";
-
-            document.title = "Representa SP";
-
-        }else{
-
-            turmaInfo.textContent =
-                "Turma não encontrada";
-
-            escolaInfo.textContent =
-                "Escola não encontrada";
-
-        }
-
-    }catch(error){
-
-        console.error(error);
-
-        greeting.textContent =
-            "Erro ao carregar nome";
-
-        turmaInfo.textContent =
-            "Erro ao carregar turma";
-
-        escolaInfo.textContent =
-            "Erro ao carregar escola";
-
-    }
-
-  }
-
-/* INICIAR */
-
-carregarDadosAluno();
-
-/* THEME */
-
-function toggleTheme(){
-
-alert("Sistema de tema aqui.");
-
-}
-
-/* LOGOUT */
-
-function logout(){
-
-alert("Logout aqui.");
-
-}
-
-/* EXPORTAR */
-
-function exportarDados(){
-
-alert("Exportação aqui.");
-
-}
-
-/* IMPORTAR */
-
-function importarDados(event){
-
-alert("Importação aqui.");
-
-}
-
-/* EDITAR */
-
-function editarAluno(index){
-
-    const aluno = alunos[index];
-
-    const raCompleto =
-        aluno.ra || "";
-
-    const raBase =
-        raCompleto.slice(0, -3);
-
-    const digito =
-        raCompleto.slice(-3, -2);
-
-    const uf =
-        raCompleto.slice(-2);
-
-    document.getElementById(
-        "novo-ra"
-    ).value = raBase;
-
-    document.getElementById(
-        "novo-digito"
-    ).value = digito;
-
-    document.getElementById(
-        "nova-uf"
-    ).value = uf;
-
-    document.getElementById(
-        "nova-senha"
-    ).value =
-        aluno.senha || "";
-
-    abrirModalAluno();
-
-    window.alunoEditando = index;
-
-  }
-
-/* DELETAR */
-
-function deletarAluno(ra){
-
-const confirmar = confirm("Deseja deletar o aluno " + ra + "?");  
-
-if(confirmar){  
-
-    alert("Aluno deletado.");  
-
-}
-
-}
-
-/* MODAL ESTATÍSTICAS */
-
-async function verificarDesempenho(index){
-
-    try{
-
-        document.getElementById(
-            "pendencias"
-        ).textContent = "...";
-
-        document.getElementById(
-            "expiradas"
-        ).textContent = "...";
-
-        document
-            .getElementById("statsModal")
-            .classList.add("active");
-
-        const aluno = alunos[index];
-
-        if(
-    !aluno ||
-    !aluno.authToken ||
-    !aluno.rooms
-){
-
-            throw new Error(
-                "Aluno sem token ou rooms."
-            );
-
-        }
-
-        /* PUBLICATION TARGETS */
-
-        const targets = [];
-
-        aluno.rooms.forEach(room => {
-
-            if(room?.name){
-
-                targets.push(room.name);
-
-                if(aluno.nick){
-
-                    targets.push(
-                        `${room.name}:${aluno.nick}`
-                    );
-
-                }
-
-            }
-
-            if(
-                Array.isArray(
-                    room.group_categories
-                )
-            ){
-
-                room.group_categories
-                .forEach(cat => {
-
-                    targets.push(
-                        String(cat)
-                    );
-
-                });
-
-            }
-
-        });
-
-        /* REMOVE DUPLICADOS */
-
-        const publicationTargets =
-            [...new Set(targets)];
-
-        /* QUERY */
-
-        const criarQuery = (
-            expiredOnly,
-            filterExpired
-        ) => {
-
-            const params =
-                new URLSearchParams();
-
-            params.append(
-                "expired_only",
-                expiredOnly
-            );
-
-            params.append(
-                "limit",
-                "100"
-            );
-
-            params.append(
-                "offset",
-                "0"
-            );
-
-            params.append(
-                "filter_expired",
-                filterExpired
-            );
-
-            params.append(
-                "is_exam",
-                "false"
-            );
-
-            params.append(
-                "with_answer",
-                "true"
-            );
-
-            params.append(
-                "is_essay",
-                "false"
-            );
-
-            params.append(
-                "answer_statuses",
-                "draft"
-            );
-
-            params.append(
-                "with_apply_moment",
-                "true"
-            );
-
-            publicationTargets
-            .forEach(target => {
-
-                params.append(
-                    "publication_target",
-                    target
-                );
-
-            });
-
-            return params.toString();
-
-        };
-
-        /* PENDENTES */
-
-        const pendentesUrl =
-            "https://edusp-api.ip.tv/tms/task/todo?" +
-            criarQuery(
-                "false",
-                "true"
-            );
-
-        /* EXPIRADAS */
-
-        const expiradasUrl =
-            "https://edusp-api.ip.tv/tms/task/todo?" +
-            criarQuery(
-                "true",
-                "false"
-            );
-
-        console.log(
-            "URL PENDENTES:",
-            pendentesUrl
-        );
-
-        console.log(
-            "URL EXPIRADAS:",
-            expiradasUrl
-        );
-
-        /* FETCH */
-
-        const [
-            pendentesResponse,
-            expiradasResponse
-        ] = await Promise.all([
-
-            fetch(
-                pendentesUrl,
-                {
-                    method:"GET",
-                    headers:{
-                        "Accept":"application/json",
-                        "Content-Type":"application/json",
-                        "x-api-key": aluno.authToken
-                    }
-                }
-            ),
-
-            fetch(
-                expiradasUrl,
-                {
-                    method:"GET",
-                    headers:{
-                        "Accept":"application/json",
-                        "Content-Type":"application/json",
-                        "x-api-key": aluno.authToken
-                    }
-                }
-            )
-
-        ]);
-
-        const pendentesData =
-            await pendentesResponse.json();
-
-        const expiradasData =
-            await expiradasResponse.json();
-
-        console.log(
-            "PENDENTES:",
-            pendentesData
-        );
-
-        console.log(
-            "EXPIRADAS:",
-            expiradasData
-        );
-
-        /* TOTAL */
-
-        const totalPendentes =
-            Array.isArray(
-                pendentesData
-            )
-            ? pendentesData.length
-            : 0;
-
-        const totalExpiradas =
-            Array.isArray(
-                expiradasData
-            )
-            ? expiradasData.length
-            : 0;
-
-        /* MOSTRAR */
-
-        document.getElementById(
-            "pendencias"
-        ).textContent =
-            totalPendentes;
-
-        document.getElementById(
-            "expiradas"
-        ).textContent =
-            totalExpiradas;
-
-    }catch(error){
-
-        console.error(
-            "ERRO STATUS:",
-            error
-        );
-
-        document.getElementById(
-            "pendencias"
-        ).textContent = "Erro";
-
-        document.getElementById(
-            "expiradas"
-        ).textContent = "Erro";
-
-    }
-
-    }
-
-/* FECHAR MODAL */
-
-function fecharModal(){
-
-document.getElementById("statsModal")  
-    .classList.remove("active");
-
-}
-
-/* FECHAR AO CLICAR FORA */
-
-document.getElementById("statsModal")
-.addEventListener("click", (e) => {
-
-if(e.target.id === "statsModal"){  
-
-    fecharModal();  
-
-}
-
-});
-
-/* =========================================
-
-ALUNOS
-========================================= */
-
-let alunos =
-JSON.parse(localStorage.getItem("alunos")) || [];
-
-const corpoTabela =
-document.getElementById("corpo-tabela");
-
-/* RENDERIZAR */
-
-function renderizarAlunos(){
-
-    corpoTabela.innerHTML = "";
-
-    alunos.forEach((aluno, index) => {
-
-        corpoTabela.innerHTML += `
-        
-        <tr>
-
-            <!-- NOME + RA -->
-
-            <td>
-
-                <div style="
-                    display:flex;
-                    flex-direction:column;
-                    gap:4px;
-                ">
-
-                    <span style="
-                        font-weight:bold;
-                        font-size:15px;
-                    ">
-                        ${aluno.nome || "Aluno"}
-                    </span>
-
-                    <span style="
-                        font-size:13px;
-                        color:var(--text-muted);
-                        font-family:monospace;
-                    ">
-                        ${aluno.ra}
-                    </span>
-
-                </div>
-
-            </td>
-
-            <!-- SALA -->
-
-            <td style="
-                color:var(--text-muted);
-                font-size:14px;
-            ">
-                ${aluno.sala || "Sem sala"}
-            </td>
-
-            <!-- AÇÕES -->
-
-            <td style="
-                text-align:right;
-                white-space:nowrap;
-            ">
-
-                <button
-                    class="btn btn-ghost"
-                    style="padding:6px 10px"
-                    onclick="editarAluno(${index})"
-                >
-                    <i class="fas fa-edit"></i>
-                </button>
-
-                <button
-                    class="btn btn-ghost"
-                    style="
-                        padding:6px 10px;
-                        color:var(--danger)
-                    "
-                    onclick="deletarAluno(${index})"
-                >
-                    <i class="fas fa-trash"></i>
-                </button>
-
-                <button
-                    class="btn btn-primary"
-                    style="padding:6px 10px"
-                    onclick="verificarDesempenho(${index})"
-                >
-                    <i class="fas fa-chart-simple"></i>
-                </button>
-
-            </td>
-
-        </tr>
-        
-        `;
-
-    });
-
-  }
-
-/* MODAL */
-
-function abrirModalAluno(){
-
-document  
-    .getElementById("alunoModal")  
-    .classList.add("active");
-
-}
-
-function fecharModalAluno(){
-
-document  
-    .getElementById("alunoModal")  
-    .classList.remove("active");
-
-}
-/* PARSE JWT */
-
-function parseJwt(token){
-
-    try{
-
-        const base64Url =
-            token.split(".")[1];
-
-        const base64 =
-            base64Url
-            .replace(/-/g, "+")
-            .replace(/_/g, "/");
-
-        const jsonPayload =
-            decodeURIComponent(
-
-                atob(base64)
-                .split("")
-                .map(c => {
-
-                    return "%" +
-                    ("00" + c.charCodeAt(0).toString(16))
-                    .slice(-2);
-
-                })
-                .join("")
-
-            );
-
-        return JSON.parse(jsonPayload);
-
-    }catch(error){
-
-        console.error(
-            "ERRO PARSE JWT:",
-            error
-        );
-
-        return {};
-
-    }
-
-  }
-  async function buscarRooms(token, nick){
-
-    try{
-
-        const response = await fetch(
-            "https://edusp-api.ip.tv/survey/todo/count",
-            {
-                method:"GET",
-                headers:{
-                    "Accept":"application/json",
-                    "Authorization":"Bearer " + token
-                }
-            }
-        );
-
-        console.log("STATUS ROOMS:", response.status);
-
-        /* SE DER ERRO NÃO QUEBRA O SISTEMA */
-
-        if(!response.ok){
-
-            console.log("Falha ao buscar rooms");
-
-            return [];
-
-        }
-
-        const finalUrl = response.url;
-
-        console.log("URL FINAL:", finalUrl);
-
-        const url = new URL(finalUrl);
-
-        const targets =
-            url.searchParams.getAll(
-                "publication_target"
-            );
-
-        console.log("TARGETS:", targets);
-
-        const roomsMap = {};
-
-        targets.forEach(target => {
-
-            if(target.includes(":")){
-                return;
-            }
-
-            if(/^\d+$/.test(target)){
-                return;
-            }
-
-            if(!roomsMap[target]){
-
-                roomsMap[target] = {
-                    name: target,
-                    group_categories:[]
-                };
-
-            }
-
-        });
-
-        targets.forEach(target => {
-
-            if(/^\d+$/.test(target)){
-
-                const firstRoom =
-                    Object.keys(roomsMap)[0];
-
-                if(firstRoom){
-
-                    roomsMap[firstRoom]
-                        .group_categories
-                        .push({
-                            id: target
-                        });
-
-                }
-
-            }
-
-        });
-
-        return Object.values(
-            roomsMap
-        );
-
-    }catch(error){
-
-        console.error(
-            "ERRO ROOMS:",
-            error
-        );
-
-        return [];
-
-    }
-
-  }
+        <path d="M3 3l18 18"/>
+        <path d="M10.58 10.58a2 2 0 0 0 2.83 2.83"/>
+        <path d="M9.88 5.09A10.94 10.94 0 0 1 12 5c6.5 0 10 7 10 7a13.16 13.16 0 0 1-4.08 5.11"/>
+        <path d="M6.61 6.61A13.53 13.53 0 0 0 2 12s3.5 7 10 7a10.94 10.94 0 0 0 5.09-1.17"/>
+    </svg>
+
+</button>  
+        </div>  
+    </div>  
+
+    <button type="submit" class="login-btn">
+
+    <span>Entrar</span>
+
+    <svg
+        class="login-arrow"
+        xmlns="http://www.w3.org/2000/svg"
+        viewBox="0 0 24 24"
+        fill="currentColor"
+    >
+        <path
+            fill-rule="evenodd"
+            d="M12.97 3.97a.75.75 0 0 1 1.06 0l7.5 7.5a.75.75 0 0 1 0 1.06l-7.5 7.5a.75.75 0 1 1-1.06-1.06l6.22-6.22H3a.75.75 0 0 1 0-1.5h16.19l-6.22-6.22a.75.75 0 0 1 0-1.06Z"
+            clip-rule="evenodd"
+        />
+    </svg>
+
+</button>  
+
+    <div class="loading" id="loading">  
+          
+    </div>  
+    <div class="error-message" id="errorMessage"></div>  
+
+</form>
+
+</div>  <script>  
+const loginForm = document.getElementById("loginForm");  
+const togglePassword = document.getElementById("togglePassword");  
+const senhaInput = document.getElementById("senha");  
   
-/* MOSTRAR / OCULTAR SENHA */
+  
+const loading = document.getElementById("loading");  
+const errorMessage = document.getElementById("errorMessage");  
+  
+const loginBtn = document.querySelector(".login-btn");  
+  
+/* MOSTRAR / OCULTAR SENHA */  
+  
+const eyeOpen =
+    document.getElementById("eyeOpen");
 
-const toggleNovaSenha =
-    document.getElementById(
-        "toggleNovaSenha"
-    );
+const eyeClosed =
+    document.getElementById("eyeClosed");
 
-const novaSenhaInput =
-    document.getElementById(
-        "nova-senha"
-    );
+togglePassword.addEventListener("click", () => {
 
-toggleNovaSenha.addEventListener(
+    if(senhaInput.type === "password"){
+
+        senhaInput.type = "text";
+
+        eyeOpen.style.display = "none";
+        eyeClosed.style.display = "block";
+
+    }else{
+
+        senhaInput.type = "password";
+
+        eyeOpen.style.display = "block";
+        eyeClosed.style.display = "none";
+
+    }
+
+});  
+  
+  /* UF DROPDOWN */
+
+const ufButton =
+    document.getElementById("ufButton");
+
+const ufDropdown =
+    document.getElementById("ufDropdown");
+
+const ufItems =
+    document.querySelectorAll(".uf-item");
+
+/* ABRIR */
+
+ufButton.addEventListener(
     "click",
     () => {
 
+        const aberto =
+            ufDropdown.style.display === "flex";
+
+        ufDropdown.style.display =
+            aberto
+            ? "none"
+            : "flex";
+
+    }
+);
+
+/* SELECIONAR */
+
+ufItems.forEach(item => {
+
+    item.addEventListener(
+        "click",
+        () => {
+
+            ufButton.textContent =
+                item.textContent;
+
+            ufDropdown.style.display =
+                "none";
+
+        }
+    );
+
+});
+
+/* FECHAR AO CLICAR FORA */
+
+document.addEventListener(
+    "click",
+    (e) => {
+
         if(
-            novaSenhaInput.type ===
-            "password"
+            !e.target.closest(".uf-wrapper")
         ){
 
-            novaSenhaInput.type = "text";
-
-            toggleNovaSenha.textContent =
-                "Ocultar";
-
-        }else{
-
-            novaSenhaInput.type =
-                "password";
-
-            toggleNovaSenha.textContent =
-                "Mostrar";
+            ufDropdown.style.display =
+                "none";
 
         }
 
     }
 );
 
-  /* PARSE JWT */
-
-function parseJwt(token){
-
-    try{
-
-        if(!token){
-
-            console.error(
-                "TOKEN VAZIO NO parseJwt"
-            );
-
-            return {};
-
-        }
-
-        const base64Url =
-            token.split(".")[1];
-
-        const base64 =
-            base64Url
-            .replace(/-/g, "+")
-            .replace(/_/g, "/");
-
-        const jsonPayload =
-            decodeURIComponent(
-
-                atob(base64)
-                .split("")
-                .map(c => {
-
-                    return "%" +
-                    ("00" + c.charCodeAt(0).toString(16))
-                    .slice(-2);
-
-                })
-                .join("")
-
-            );
-
-        return JSON.parse(jsonPayload);
-
-    }catch(error){
-
-        console.error(
-            "ERRO parseJwt:",
-            error
-        );
-
-        return {};
-
-    }
-
-  }
+/* LOGIN */  
   
-/* ADICIONAR */
-
-async function adicionarAluno(){
-
-    const ra =
-        document.getElementById("novo-ra")
-        .value.trim();
-
-    const digito =
-        document.getElementById("novo-digito")
-        .value.trim();
-
+loginForm.addEventListener("submit", async (e) => {  
+  
+    e.preventDefault();  
+  
+    errorMessage.style.display = "none";  
+  
+    const raBase = document  
+        .getElementById("ra")  
+        .value  
+        .trim();  
+  
+    const digito = document  
+        .getElementById("digito")  
+        .value  
+        .trim();  
+  
     const uf =
-        document.getElementById("nova-uf")
-        .value.trim()
-        .toUpperCase();
-
-    const senha =
-        document.getElementById("nova-senha")
-        .value.trim();
-
-    if(!ra || !digito || !uf || !senha){
-
-        alert("Preencha todos os campos.");
-
-        return;
-
-    }
-
-    const usuario =
-        `${ra}${digito}${uf}`;
-
-    try{
-
-        const response = await fetch(
-            "https://representa-api.onrender.com/loginAluno",
-            {
-                method:"POST",
-                headers:{
-                    "Content-Type":"application/json",
-                    "Accept":"application/json"
-                },
-                body:JSON.stringify({
-                    user:usuario,
-                    senha:senha
-                })
-            }
-        );
-
-        const data =
-            await response.json();
-        const tokenSed = data.login.token;
-
-const cmsResponse = await fetch(
-    "https://edusp-api.ip.tv/registration/edusp/token",
-    {
-        method:"POST",
-        headers:{
-            "Content-Type":"application/json",
-            "Accept":"application/json",
-            "x-api-realm":"edusp",
-            "x-api-platform":"webclient"
-        },
-        body:JSON.stringify({
-            token: tokenSed
-        })
-    }
-);
-
-const dataCms = await cmsResponse.json();
-
-console.log(
-    "CMS TOKEN:",
-    dataCms
-);
-
-        console.log(
-            "LOGIN ALUNO:",
-            data
-        );
-
-        if(!response.ok){
-
-            alert("Login inválido.");
-
-            console.log(data);
-
-            return;
-
-        }
-
-        const loginData =
-            data?.login || {};
-
-        const tokenSed =
-    loginData?.token || "";
-        /* TOKEN IPTV */
-
-const registroResponse = await fetch(
-    "https://edusp-api.ip.tv/registration/edusp/token",
-    {
-        method:"POST",
-        headers:{
-            "Content-Type":"application/json",
-            "Accept":"application/json",
-            "x-api-realm":"edusp",
-            "x-api-platform":"webclient"
-        },
-        body:JSON.stringify({
-            token: tokenSed
-        })
-    }
-);
-
-const registroData =
-    await registroResponse.json();
-
-console.log(
-    "REGISTRO IPTV:",
-    registroData
-);
-
-const authToken =
-    registroData?.auth_token || "";
-
-        const payload =
-            parseJwt(tokenFinal);
-
-        let rooms = [];
-
-        try{
-
-            rooms = await buscarRooms(
-                tokenFinal,
-                payload?.NICKNAME || ""
-            );
-
-        }catch(error){
-
-            console.log(
-                "Erro ao buscar rooms:",
-                error
-            );
-
-            rooms = [];
-
-        }
-
-        console.log(payload);
-
-        console.log(rooms);
-
-        const novoAluno = {
-
-    nome:
-        data?.aluno?.nome ||
-        "Aluno",
-
-    ra: usuario,
-
-    senha: senha,
-
-    token: tokenSed,
-
-    authToken: authToken,
-
-    codigoAluno:
-        data?.aluno?.codigoUsuario ||
-        "",
-
-    nick:
-        data?.aluno?.nickname ||
-        payload?.NICKNAME ||
-        "",
-
-    sala:
-        data?.turma?.data?.[0]
-        ?.DescricaoTurma ||
-        "Sem sala",
-
-    rooms: rooms
-
-};
-
-        /* VERIFICA DUPLICADO */
-
-        const indexExistente =
-            alunos.findIndex(
-                a => a.ra === usuario
-            );
-
-        /* SUBSTITUI */
-
-        if(indexExistente !== -1){
-
-            alunos[indexExistente] =
-                novoAluno;
-
-        }else{
-
-            alunos.push(novoAluno);
-
-        }
-
-        localStorage.setItem(
-            "alunos",
-            JSON.stringify(alunos)
-        );
-
-        renderizarAlunos();
-
-        fecharModalAluno();
-
-    }catch(error){
-
-        console.error(error);
-
-        alert("Erro ao conectar.");
-
-    }
-
-    }
-    
-/* EDITAR */
-
-function editarAluno(index){
-
-    const aluno = alunos[index];
-
-    const raCompleto =
-        aluno.ra || "";
-
-    const raBase =
-        raCompleto.slice(0, -3);
-
-    const digito =
-        raCompleto.slice(-3, -2);
-
-    const uf =
-        raCompleto.slice(-2);
-
-    const modalExistente =
-        document.getElementById(
-            "editarAlunoModal"
-        );
-
-    if(modalExistente){
-
-        modalExistente.remove();
-
-    }
-
-    const modal = document.createElement("div");
-
-    modal.id = "editarAlunoModal";
-
-    modal.className =
-        "modal-overlay active";
-
-    modal.innerHTML = `
-
-    <div class="modal">
-
-        <h3>
-            Editar Aluno
-        </h3>
-
-        <p class="modal-subtitle">
-            Atualize os dados do aluno.
-        </p>
-
-        <div class="form-group">
-
-            <label>
-                RA
-            </label>
-
-            <div class="form-row">
-
-                <input
-                    type="text"
-                    id="editar-ra"
-                    class="form-input"
-                    value="${raBase}"
-                >
-
-                <input
-                    type="text"
-                    id="editar-digito"
-                    class="form-input"
-                    maxlength="1"
-                    value="${digito}"
-                    style="
-                        max-width:70px;
-                        text-align:center;
-                        padding:0;
-                    "
-                >
-
-                <select
-                    id="editar-uf"
-                    class="form-select"
-                >
-
-                    <option value="SP">
-                        SP
-                    </option>
-
-                    <option value="RJ">
-                        RJ
-                    </option>
-
-                    <option value="MG">
-                        MG
-                    </option>
-
-                    <option value="PR">
-                        PR
-                    </option>
-
-                    <option value="RS">
-                        RS
-                    </option>
-
-                </select>
-
-            </div>
-
-        </div>
-
-        <div class="form-group">
-
-            <label>
-                Senha
-            </label>
-
-            <input
-                type="text"
-                id="editar-senha"
-                class="form-input"
-                value="${aluno.senha || ""}"
-            >
-
-        </div>
-
-        <button
-            class="btn btn-primary modal-btn"
-            id="salvar-edicao"
-        >
-            Salvar
-        </button>
-
-        <button
-            class="btn btn-ghost close-btn modal-btn"
-            id="cancelar-edicao"
-        >
-            Cancelar
-        </button>
-
-    </div>
-
-    `;
-
-    document.body.appendChild(modal);
-
-    document.getElementById(
-        "editar-uf"
-    ).value = uf;
-
-    document.getElementById(
-        "cancelar-edicao"
-    ).onclick = () => {
-
-        modal.remove();
-
-    };
-
-    document.getElementById(
-        "salvar-edicao"
-    ).onclick = () => {
-
-        const novoRa =
-            document.getElementById(
-                "editar-ra"
-            ).value.trim();
-
-        const novoDigito =
-            document.getElementById(
-                "editar-digito"
-            ).value.trim();
-
-        const novaUf =
-            document.getElementById(
-                "editar-uf"
-            ).value.trim();
-
-        const novaSenha =
-            document.getElementById(
-                "editar-senha"
-            ).value.trim();
-
-        alunos[index].ra =
-            `${novoRa}${novoDigito}${novaUf}`;
-
-        alunos[index].senha =
-            novaSenha;
-
-        localStorage.setItem(
-            "alunos",
-            JSON.stringify(alunos)
-        );
-
-        renderizarAlunos();
-
-        modal.remove();
-
-    };
-
-  }
-
-/* DELETAR */
-
-function deletarAluno(index){
-
-const confirmar = confirm(  
-    "Deseja remover este aluno?"  
-);  
-
-if(!confirmar) return;  
-
-alunos.splice(index, 1);  
-
-localStorage.setItem(  
-    "alunos",  
-    JSON.stringify(alunos)  
-);  
-
-renderizarAlunos();
-
-}
-
-/* EXPORTAR */
-
-function exportarDados(){
-
-const blob = new Blob(  
-    [JSON.stringify(alunos, null, 4)],  
-    { type:"application/json" }  
-);  
-
-const url = URL.createObjectURL(blob);  
-
-const a = document.createElement("a");  
-
-a.href = url;  
-a.download = "alunos.json";  
-a.click();
-
-}
-
-/* IMPORTAR */
-
-function importarDados(event){
-
-const arquivo = event.target.files[0];  
-
-if(!arquivo) return;  
-
-const leitor = new FileReader();  
-
-leitor.onload = function(e){  
-
-    try{  
-
-        alunos = JSON.parse(e.target.result);  
-
-        localStorage.setItem(  
-            "alunos",  
-            JSON.stringify(alunos)  
-        );  
-
-        renderizarAlunos();  
-
-        alert("Importado com sucesso.");  
-
-    }catch{  
-
-        alert("Arquivo inválido.");  
-
+    document
+        .getElementById("ufButton")
+        .textContent
+        .trim();  
+  
+    const ra = `${raBase}${digito}${uf}`;  
+  
+    const senha = senhaInput.value.trim();  
+  
+    if(!raBase || !digito || !senha){  
+  
+        errorMessage.style.display = "block";  
+        errorMessage.textContent =  
+            "Preencha todos os campos.";  
+  
+        return;  
+  
     }  
-
-};  
-
-leitor.readAsText(arquivo);
-
-}
-
-/* TEMA */
-
-function toggleTheme(){
-
-document.body.classList.toggle("dark");  
-
-const dark =  
-    document.body.classList.contains("dark");  
-
-if(dark){  
-
-    document.documentElement.style.setProperty("--bg", "#111111");  
-    document.documentElement.style.setProperty("--card", "#1c1c1c");  
-    document.documentElement.style.setProperty("--text", "#ffffff");  
-    document.documentElement.style.setProperty("--text-muted", "#aaaaaa");  
-    document.documentElement.style.setProperty("--border", "#333333");  
-
-}else{  
-
-    document.documentElement.style.setProperty("--bg", "#f3f3f3");  
-    document.documentElement.style.setProperty("--card", "#ffffff");  
-    document.documentElement.style.setProperty("--text", "#111111");  
-    document.documentElement.style.setProperty("--text-muted", "#666666");  
-    document.documentElement.style.setProperty("--border", "#ececec");  
-
-}
-
-}
-
-/* LOGOUT */
-
-function logout(){
-
-const confirmar = confirm(  
-    "Deseja sair?"  
+  
+    loading.style.display = "block";  
+  
+try{  
+  
+    loginBtn.disabled = true;  
+    loginBtn.style.opacity = "0.7";  
+  
+    const response = await fetch(  
+    "https://representa-api.onrender.com/login",  
+    {  
+        method:"POST",  
+        headers:{  
+            "Accept":"application/json, text/plain, */*",  
+            "Content-Type":"application/json"  
+        },  
+        body:JSON.stringify({  
+            user:ra,  
+            senha:senha  
+        })  
+    }  
 );  
-
-if(!confirmar) return;  
-
-localStorage.clear();  
-
-window.location.href = "index.html";
-
-}
-
-/* INICIAR */
-
-renderizarAlunos();
-</script>
-
-</body>  
+  
+    const data = await response.json();  
+  
+        console.log("LOGIN:", data);  
+  
+        console.log(data);  
+  
+if(  
+    !response.ok ||  
+    (  
+        data.statusCode &&  
+        data.statusCode !== 200  
+    )  
+){  
+    throw new Error(  
+        data.message || "Login inválido"  
+    );  
+    }  
+  
+        /* TOKEN */  
+  
+        localStorage.setItem(  
+            "token",  
+            data.token  
+        );  
+  
+        /* NOME */  
+  
+        localStorage.setItem(  
+            "nome",  
+            data.DadosUsuario.NAME  
+        );  
+  
+        /* CÓDIGO */  
+  
+        localStorage.setItem(  
+    "codigoAluno",  
+    data.DadosUsuario.CD_USUARIO.toString().slice(0, -1)  
+);  
+  
+        /* LOGIN */  
+  
+        localStorage.setItem(  
+            "login",  
+            data.statusRetorno  
+        );  
+  
+        /* REDIRECIONAR */  
+  
+        window.location.href = "dashboard.html";  
+  
+    }catch(error){  
+  
+        console.error(error);  
+  
+        errorMessage.style.display = "block";  
+  
+        errorMessage.textContent =  
+            error.message;  
+  
+    }finally{  
+  
+    loading.style.display = "none";  
+  
+    loginBtn.disabled = false;  
+    loginBtn.style.opacity = "1";  
+  
+}  
+  
+});  
+</script>  </body>  
     </html>

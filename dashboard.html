@@ -386,6 +386,7 @@ Carregando turma...
             <thead>  
 
                 <tr>  
+                    <th>Nome</th>
                     <th>RA do Aluno</th>  
                     <th>Sala Alocada</th>  
                     <th style="text-align: right;">  
@@ -435,7 +436,32 @@ Carregando turma...
             X  
         </div>  
 
-    </div>  
+    </div>
+    <div class="stats-box">
+
+    <div class="stats-label">
+        Frequência
+    </div>
+
+    <div
+        class="stats-value"
+        id="frequencia"
+    >
+        X
+    </div>
+
+    <div
+        id="faltas-info"
+        style="
+            margin-top:8px;
+            font-size:14px;
+            color:var(--text-muted);
+        "
+    >
+        --
+    </div>
+
+</div>
 
     <button class="btn btn-primary close-btn" onclick="fecharModal()">  
         Fechar  
@@ -725,6 +751,18 @@ async function verificarDesempenho(index){
 
     try{
 
+        const aluno = alunos[index];
+
+        if(!aluno?.token){
+
+            throw new Error("Sem token");
+
+        }
+
+        document
+            .getElementById("statsModal")
+            .classList.add("active");
+
         document.getElementById(
             "pendencias"
         ).textContent = "...";
@@ -733,96 +771,185 @@ async function verificarDesempenho(index){
             "expiradas"
         ).textContent = "...";
 
-        document
-            .getElementById("statsModal")
-            .classList.add("active");
+        document.getElementById(
+            "frequencia"
+        ).textContent = "...";
 
-        const aluno = alunos[index];
+        /*
+        =========================================
+        PUBLICATION TARGETS
+        =========================================
+        */
 
-        if(
-            !aluno ||
-            !aluno.token
-        ){
-            throw new Error(
-                "Aluno sem token."
-            );
-        }
+        const publicationTargets = [
 
-        /* PENDÊNCIAS */
+            "r36a18ac084f954070-l",
+            "r5a5ec1aa99f65904f-l",
+            "rd196c555145563b66-l",
 
-        const pendenciasResponse =
+            "1204",
+            "1828",
+            "1854",
+            "767",
+            "1928",
+            "1834",
+
+            `r36a18ac084f954070-l:${aluno.nick}`,
+            `r5a5ec1aa99f65904f-l:${aluno.nick}`,
+            `rd196c555145563b66-l:${aluno.nick}`
+
+        ];
+
+        const params =
+            publicationTargets
+            .map(p =>
+                `publication_target=${encodeURIComponent(p)}`
+            )
+            .join("&");
+
+        /*
+        =========================================
+        TAREFAS
+        =========================================
+        */
+
+        const tarefasResponse =
             await fetch(
-                "https://edusp-api.ip.tv/tms/task/todo/count?filter_expired=true&with_answer=true&answer_statuses=draft&answer_statuses=pending",
+
+                `https://edusp-api.ip.tv/tms/task/todo/count?${params}&filter_expired=true&with_answer=true&answer_statuses=draft&answer_statuses=pending`,
+
                 {
-                    method:"GET",
                     headers:{
                         "Accept":"application/json",
                         "Content-Type":"application/json",
                         "x-api-key": aluno.token
                     }
                 }
+
             );
 
-        /* MENSAGENS */
+        const tarefasData =
+            await tarefasResponse.json();
+
+        const totalTarefas =
+            tarefasData?.[0]?.count || 0;
+
+        /*
+        =========================================
+        MENSAGENS
+        =========================================
+        */
 
         const mensagensResponse =
             await fetch(
-                "https://edusp-api.ip.tv/survey/todo/count?filter_expired=true&with_answer=true&answer_statuses=draft",
+
+                `https://edusp-api.ip.tv/survey/todo/count?${params}&filter_expired=true&with_answer=true&answer_statuses=draft`,
+
                 {
-                    method:"GET",
                     headers:{
                         "Accept":"application/json",
                         "Content-Type":"application/json",
                         "x-api-key": aluno.token
                     }
                 }
-            );
 
-        const pendenciasData =
-            await pendenciasResponse.json();
+            );
 
         const mensagensData =
             await mensagensResponse.json();
 
-        console.log(
-            "PENDÊNCIAS:",
-            pendenciasData
-        );
-
-        console.log(
-            "MENSAGENS:",
-            mensagensData
-        );
-
-        const totalPendencias =
-            Array.isArray(
-                pendenciasData
-            )
-            ? (
-                pendenciasData[0]
-                ?.count || 0
-            )
-            : 0;
-
         const totalMensagens =
             mensagensData?.count || 0;
+
+        /*
+        =========================================
+        FALTAS
+        =========================================
+        */
+
+        const faltasResponse =
+            await fetch(
+
+                `https://sedintegracoes.educacao.sp.gov.br/saladofuturobffapi/apiboletim/api/Frequencia/GetFaltasBimestreAtual?codigoAluno=${aluno.codigoAluno}`,
+
+                {
+                    headers:{
+                        "Accept":"application/json, text/plain, */*",
+                        "Authorization":
+                             `Bearer ${aluno.token}`,
+                        "Ocp-Apim-Subscription-Key":
+                            "d701a2043aa24d7ebb37e9adf60d043b"
+                    }
+                }
+
+            );
+
+        const faltasData =
+            await faltasResponse.json();
+
+        const frequencia =
+            faltasData?.data?.[0]
+            ?.porcentagemFrequencia || 0;
+
+        const faltas =
+            faltasData?.data?.[0]
+            ?.totalFaltasBimestre || 0;
+
+        /*
+        =========================================
+        UI
+        =========================================
+        */
 
         document.getElementById(
             "pendencias"
         ).textContent =
-            totalPendencias;
+            totalTarefas;
 
         document.getElementById(
             "expiradas"
         ).textContent =
             totalMensagens;
 
+        const frequenciaEl =
+            document.getElementById(
+                "frequencia"
+            );
+
+        frequenciaEl.textContent =
+            `${frequencia}%`;
+
+        document.getElementById(
+    "faltas-info"
+).textContent =
+    `${faltas} faltas • ${frequencia}% presença`;
+
+        /*
+        =========================================
+        CORES
+        =========================================
+        */
+
+        if(frequencia >= 70){
+
+            frequenciaEl.style.color =
+                "#22c55e";
+
+        }else if(frequencia >= 40){
+
+            frequenciaEl.style.color =
+                "#eab308";
+
+        }else{
+
+            frequenciaEl.style.color =
+                "#ef4444";
+
+        }
+
     }catch(error){
 
-        console.error(
-            "ERRO:",
-            error
-        );
+        console.error(error);
 
         document.getElementById(
             "pendencias"
@@ -830,6 +957,10 @@ async function verificarDesempenho(index){
 
         document.getElementById(
             "expiradas"
+        ).textContent = "Erro";
+
+        document.getElementById(
+            "frequencia"
         ).textContent = "Erro";
 
     }
@@ -873,55 +1004,59 @@ document.getElementById("corpo-tabela");
 
 function renderizarAlunos(){
 
-corpoTabela.innerHTML = "";  
+    corpoTabela.innerHTML = "";
 
-alunos.forEach((aluno, index) => {  
+    alunos.forEach((aluno, index) => {
 
-    corpoTabela.innerHTML += `  
-      
-    <tr>  
+        corpoTabela.innerHTML += `
+        
+        <tr>
 
-        <td style="font-weight: 600; font-family: monospace;">  
-            ${aluno.ra}  
-        </td>  
+            <td style="font-weight:600;">
+                ${aluno.nome || "Aluno"}
+            </td>
 
-        <td style="color: var(--text-muted); font-size: 14px;">  
-            ${aluno.sala}  
-        </td>  
+            <td style="font-weight:600; font-family:monospace;">
+                ${aluno.ra}
+            </td>
 
-        <td style="text-align: right;">  
+            <td style="color:var(--text-muted); font-size:14px;">
+                ${aluno.sala}
+            </td>
 
-            <button   
-                class="btn btn-ghost"  
-                style="padding: 6px 10px"  
-                onclick="editarAluno(${index})"  
-            >  
-                <i class="fas fa-edit"></i>  
-            </button>  
+            <td style="text-align:right;">
 
-            <button   
-                class="btn btn-ghost"  
-                style="padding: 6px 10px; color: var(--danger)"  
-                onclick="deletarAluno(${index})"  
-            >  
-                <i class="fas fa-trash"></i>  
-            </button>  
+                <button
+                    class="btn btn-ghost"
+                    style="padding:6px 10px"
+                    onclick="editarAluno(${index})"
+                >
+                    <i class="fas fa-edit"></i>
+                </button>
 
-            <button   
-                class="btn btn-primary"  
-                style="padding: 6px 10px"  
-                onclick="verificarDesempenho(${index})"  
-            >  
-                <i class="fas fa-chart-simple"></i>  
-            </button>  
+                <button
+                    class="btn btn-ghost"
+                    style="padding:6px 10px; color:var(--danger)"
+                    onclick="deletarAluno(${index})"
+                >
+                    <i class="fas fa-trash"></i>
+                </button>
 
-        </td>  
+                <button
+                    class="btn btn-primary"
+                    style="padding:6px 10px"
+                    onclick="verificarDesempenho(${index})"
+                >
+                    <i class="fas fa-chart-simple"></i>
+                </button>
 
-    </tr>  
-      
-    `;  
+            </td>
 
-});
+        </tr>
+        
+        `;
+
+    });
 
 }
 
@@ -1042,23 +1177,39 @@ return;
 
 alunos.push({
 
+    nome:
+    data?.login?.DadosUsuario?.NAME ||
+    data?.DadosUsuario?.NAME ||
+    "Aluno",
+
     ra: usuario,
 
     senha: senha,
 
     token:
-        data.token ||
-        data.Token ||
-        "",
+    data?.login?.token ||
+    data?.token ||
+    data?.Token ||
+    "",
 
     codigoAluno:
         data.CD_USUARIO ||
+        data?.login?.DadosUsuario?.CD_USUARIO ||
         "",
+
+    nick:
+        data?.login?.DadosUsuario?.NICKNAME ||
+        usuario.toLowerCase(),
 
     sala:
         data?.turma?.data?.[0]
         ?.DescricaoTurma ||
-        "Sem sala"
+        "Sem sala",
+
+    codigoEscola:
+        data?.turma?.data?.[0]
+        ?.CodigoEscola ||
+        0
 
 });
 

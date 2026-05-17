@@ -428,7 +428,7 @@ Carregando turma...
     <div class="stats-box">  
 
         <div class="stats-label">  
-            Expiradas  
+            Mensagens  
         </div>  
 
         <div class="stats-value" id="expiradas">  
@@ -725,9 +725,13 @@ async function verificarDesempenho(index){
 
     try{
 
-        document.getElementById("pendencias").textContent = "...";
+        document.getElementById(
+            "pendencias"
+        ).textContent = "...";
 
-        document.getElementById("expiradas").textContent = "...";
+        document.getElementById(
+            "expiradas"
+        ).textContent = "...";
 
         document
             .getElementById("statsModal")
@@ -735,69 +739,102 @@ async function verificarDesempenho(index){
 
         const aluno = alunos[index];
 
-        const params = new URLSearchParams({
+        if(
+            !aluno ||
+            !aluno.token
+        ){
+            throw new Error(
+                "Aluno sem token."
+            );
+        }
 
-            authToken: aluno.token,
+        /* PENDÊNCIAS */
 
-            nick: aluno.nick,
+        const pendenciasResponse =
+            await fetch(
+                "https://edusp-api.ip.tv/tms/task/todo/count?filter_expired=true&with_answer=true&answer_statuses=draft&answer_statuses=pending",
+                {
+                    method:"GET",
+                    headers:{
+                        "Accept":"application/json",
+                        "Content-Type":"application/json",
+                        "x-api-key": aluno.token
+                    }
+                }
+            );
 
-            rooms: JSON.stringify(
-                aluno.rooms
-            ),
+        /* MENSAGENS */
 
-            expired: "false"
+        const mensagensResponse =
+            await fetch(
+                "https://edusp-api.ip.tv/survey/todo/count?filter_expired=true&with_answer=true&answer_statuses=draft",
+                {
+                    method:"GET",
+                    headers:{
+                        "Accept":"application/json",
+                        "Content-Type":"application/json",
+                        "x-api-key": aluno.token
+                    }
+                }
+            );
 
-        });
+        const pendenciasData =
+            await pendenciasResponse.json();
 
-        const response = await fetch(
-            `https://representa-api.onrender.com/tarefas?${params.toString()}`,
-            {
-                method:"GET"
-            }
+        const mensagensData =
+            await mensagensResponse.json();
+
+        console.log(
+            "PENDÊNCIAS:",
+            pendenciasData
         );
 
-        const data = await response.json();
+        console.log(
+            "MENSAGENS:",
+            mensagensData
+        );
 
-        console.log(data);
+        const totalPendencias =
+            Array.isArray(
+                pendenciasData
+            )
+            ? (
+                pendenciasData[0]
+                ?.count || 0
+            )
+            : 0;
 
-        const tarefas =
-    Array.isArray(data)
-    ? data
-    : [];
+        const totalMensagens =
+            mensagensData?.count || 0;
 
-        const pendentes =
-            tarefas.filter(t =>
-                !t.expired
-            ).length;
+        document.getElementById(
+            "pendencias"
+        ).textContent =
+            totalPendencias;
 
-        const expiradas =
-            tarefas.filter(t =>
-                t.expired
-            ).length;
-
-        document
-            .getElementById("pendencias")
-            .textContent = pendentes;
-
-        document
-            .getElementById("expiradas")
-            .textContent = expiradas;
+        document.getElementById(
+            "expiradas"
+        ).textContent =
+            totalMensagens;
 
     }catch(error){
 
-        console.error(error);
+        console.error(
+            "ERRO:",
+            error
+        );
 
-        document
-            .getElementById("pendencias")
-            .textContent = "Erro";
+        document.getElementById(
+            "pendencias"
+        ).textContent = "Erro";
 
-        document
-            .getElementById("expiradas")
-            .textContent = "Erro";
+        document.getElementById(
+            "expiradas"
+        ).textContent = "Erro";
 
     }
 
-  }
+}
 
 /* FECHAR MODAL */
 
@@ -906,95 +943,6 @@ document
 
 }
 
-  async function buscarRooms(token, nick){
-
-    try{
-
-        const response = await fetch(
-            "https://edusp-api.ip.tv/survey/todo/count",
-            {
-                method:"GET",
-                headers:{
-                    "Accept":"application/json",
-                    "x-api-key":token
-                }
-            }
-        );
-
-        const finalUrl = response.url;
-
-        console.log("URL FINAL:", finalUrl);
-
-        const url = new URL(finalUrl);
-
-        const targets =
-            url.searchParams.getAll(
-                "publication_target"
-            );
-
-        console.log(targets);
-
-        const roomsMap = {};
-
-        targets.forEach(target => {
-
-            /* IGNORA ROOM:NICK */
-
-            if(target.includes(":")){
-                return;
-            }
-
-            /* IGNORA IDS NUMÉRICOS */
-
-            if(/^\d+$/.test(target)){
-                return;
-            }
-
-            if(!roomsMap[target]){
-
-                roomsMap[target] = {
-                    name: target,
-                    group_categories:[]
-                };
-
-            }
-
-        });
-
-        targets.forEach(target => {
-
-            if(/^\d+$/.test(target)){
-
-                const firstRoom =
-                    Object.keys(roomsMap)[0];
-
-                if(firstRoom){
-
-                    roomsMap[firstRoom]
-                        .group_categories
-                        .push({
-                            id: target
-                        });
-
-                }
-
-            }
-
-        });
-
-        return Object.values(
-            roomsMap
-        );
-
-    }catch(error){
-
-        console.error(error);
-
-        return [];
-
-    }
-
-  }
 /* MOSTRAR / OCULTAR SENHA */
 
 const toggleNovaSenha =
@@ -1091,26 +1039,11 @@ return;
 
 }
 
-const tokenFinal =
-    data.token ||
-    data.Token ||
-    "";
-
-const payload =
-    parseJwt(tokenFinal);
-
-const rooms =
-    await buscarRooms(
-        tokenFinal,
-        payload?.NICKNAME || ""
-    );
-
-console.log(payload);
-console.log(rooms);
 
 alunos.push({
 
     ra: usuario,
+
     senha: senha,
 
     token:
@@ -1122,13 +1055,10 @@ alunos.push({
         data.CD_USUARIO ||
         "",
 
-    nick:
-        payload?.NICKNAME ||
-        data.NICKNAME ||
-        data.nickname ||
-        "",
-
-    rooms: rooms
+    sala:
+        data?.turma?.data?.[0]
+        ?.DescricaoTurma ||
+        "Sem sala"
 
 });
 

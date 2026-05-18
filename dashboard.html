@@ -1199,9 +1199,11 @@ try{
                 "x-api-platform":"webclient"
             },
             body:JSON.stringify({
-                token:
-                    data?.token ||
-                    data?.Token
+               token:
+    data?.token ||
+    data?.Token ||
+    data?.login?.token ||
+    data?.login?.Token
             })
         }
     );
@@ -1229,9 +1231,11 @@ try{
         senha: senha,
 
         sedToken:
-        data?.token ||
-        data?.Token ||
-        "",
+    data?.token ||
+    data?.Token ||
+    data?.login?.token ||
+    data?.login?.Token ||
+    "",
 
         iptvToken:
         iptvData?.auth_token || "",

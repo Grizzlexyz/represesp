@@ -575,6 +575,113 @@ Carregando turma...
 </div>
 
 </div>
+  <!-- MODAL EDITAR ALUNO -->
+
+<div class="modal-overlay" id="editarAlunoModal">
+
+<div class="modal">
+
+    <h3>
+        Editar
+    </h3>
+
+    <p class="modal-subtitle">
+        Atualize os dados do aluno.
+    </p>
+
+    <!-- RA -->
+
+    <div class="form-group">
+
+        <label>
+            RA
+        </label>
+
+        <div class="form-row">
+
+            <input
+                type="text"
+                id="editar-ra"
+                class="form-input"
+                placeholder="RA"
+            >
+
+            <input
+                type="text"
+                id="editar-digito"
+                class="form-input"
+                placeholder="0"
+                maxlength="1"
+                style="
+                    max-width:70px;
+                    text-align:center;
+                    padding:0;
+                "
+            >
+
+            <select
+                id="editar-uf"
+                class="form-select"
+            >
+                <option value="SP">SP</option>
+                <option value="RJ">RJ</option>
+                <option value="MG">MG</option>
+                <option value="PR">PR</option>
+                <option value="RS">RS</option>
+            </select>
+
+        </div>
+
+    </div>
+
+    <!-- SENHA -->
+
+    <div class="form-group">
+
+        <label>
+            Senha
+        </label>
+
+        <div class="password-wrapper">
+
+            <input
+                type="password"
+                id="editar-senha"
+                class="form-input"
+                placeholder="Digite a senha"
+            >
+
+            <button
+                type="button"
+                class="toggle-password"
+                id="toggleEditarSenha"
+            >
+                Mostrar
+            </button>
+
+        </div>
+
+    </div>
+
+    <!-- BOTÕES -->
+
+    <button
+        class="btn btn-primary modal-btn"
+        onclick="salvarEdicaoAluno()"
+    >
+        Salvar
+    </button>
+
+    <button
+        class="btn btn-ghost close-btn modal-btn"
+        onclick="fecharEditarAluno()"
+    >
+        Cancelar
+    </button>
+
+</div>
+
+</div>
 <script>  
     /* =========================================  
 DADOS DO LOGIN  
@@ -1055,16 +1162,6 @@ document
 
 /* MOSTRAR / OCULTAR SENHA */
 
-const toggleNovaSenha =
-    document.getElementById(
-        "toggleNovaSenha"
-    );
-
-const novaSenhaInput =
-    document.getElementById(
-        "nova-senha"
-    );
-
 toggleNovaSenha.addEventListener(
     "click",
     () => {
@@ -1085,6 +1182,43 @@ toggleNovaSenha.addEventListener(
                 "password";
 
             toggleNovaSenha.textContent =
+                "Mostrar";
+
+        }
+
+    }
+);
+
+const toggleEditarSenha =
+    document.getElementById(
+        "toggleEditarSenha"
+    );
+
+const editarSenhaInput =
+    document.getElementById(
+        "editar-senha"
+    );
+
+toggleEditarSenha.addEventListener(
+    "click",
+    () => {
+
+        if(
+            editarSenhaInput.type ===
+            "password"
+        ){
+
+            editarSenhaInput.type = "text";
+
+            toggleEditarSenha.textContent =
+                "Ocultar";
+
+        }else{
+
+            editarSenhaInput.type =
+                "password";
+
+            toggleEditarSenha.textContent =
                 "Mostrar";
 
         }
@@ -1263,31 +1397,82 @@ try{
 
 /* EDITAR */
 
+let alunoEditandoIndex = null;
+
 function editarAluno(index){
 
-const novoRA = prompt(  
-    "Novo RA:",  
-    alunos[index].ra  
-);  
+    alunoEditandoIndex = index;
 
-if(!novoRA) return;  
+    const aluno = alunos[index];
 
-const novaSala = prompt(  
-    "Nova sala:",  
-    alunos[index].sala  
-);  
+    const raCompleto = aluno.ra || "";
 
-if(!novaSala) return;  
+    const ra = raCompleto.slice(0, -3);
+    const digito = raCompleto.slice(-3, -2);
+    const uf = raCompleto.slice(-2);
 
-alunos[index].ra = novoRA;  
-alunos[index].sala = novaSala;  
+    document.getElementById("editar-ra").value = ra;
+    document.getElementById("editar-digito").value = digito;
+    document.getElementById("editar-uf").value = uf;
+    document.getElementById("editar-senha").value = aluno.senha || "";
 
-localStorage.setItem(  
-    "alunos",  
-    JSON.stringify(alunos)  
-);  
+    document
+        .getElementById("editarAlunoModal")
+        .classList.add("active");
 
-renderizarAlunos();
+}
+
+function fecharEditarAluno(){
+
+    document
+        .getElementById("editarAlunoModal")
+        .classList.remove("active");
+
+}
+
+function salvarEdicaoAluno(){
+
+    if(alunoEditandoIndex === null) return;
+
+    const ra =
+        document.getElementById("editar-ra")
+        .value.trim();
+
+    const digito =
+        document.getElementById("editar-digito")
+        .value.trim();
+
+    const uf =
+        document.getElementById("editar-uf")
+        .value.trim().toUpperCase();
+
+    const senha =
+        document.getElementById("editar-senha")
+        .value.trim();
+
+    if(!ra || !digito || !uf || !senha){
+
+        alert("Preencha todos os campos.");
+        return;
+
+    }
+
+    alunos[alunoEditandoIndex].ra =
+        `${ra}${digito}${uf}`;
+
+    alunos[alunoEditandoIndex].senha =
+        senha;
+
+    localStorage.setItem(
+        "alunos",
+        JSON.stringify(alunos)
+    );
+
+    renderizarAlunos();
+
+    fecharEditarAluno();
+
+    alert("Aluno atualizado.");
 
 }
 

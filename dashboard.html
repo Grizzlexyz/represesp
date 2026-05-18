@@ -1186,10 +1186,14 @@ alunos.push({
 
     senha: senha,
 
-    token:
-    data?.login?.token ||
+    sedToken:
     data?.token ||
     data?.Token ||
+    "",
+
+iptvToken:
+    data?.auth_token ||
+    data?.login?.auth_token ||
     "",
 
     codigoAluno:

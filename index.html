@@ -575,34 +575,54 @@ loginForm.addEventListener("submit", async (e) => {
   
     errorMessage.style.display = "none";  
   
-    const raBase = document  
-        .getElementById("ra")  
-        .value  
-        .trim();  
-  
-    const digito = document  
-        .getElementById("digito")  
-        .value  
-        .trim();  
-  
-    const uf =
-    document
-        .getElementById("ufButton")
-        .textContent
-        .trim();  
-  
-    const ra = `${raBase}${digito}${uf}`;  
-  
-    const senha = senhaInput.value.trim();  
-  
-    if(!raBase || !digito || !senha){  
-  
-        errorMessage.style.display = "block";  
-        errorMessage.textContent =  
-            "Preencha todos os campos.";  
-  
-        return;  
-  
+    let raBase = document
+    .getElementById("ra")
+    .value
+    .trim();
+
+let digito = document
+    .getElementById("digito")
+    .value
+    .trim();
+
+const uf =
+document
+    .getElementById("ufButton")
+    .textContent
+    .trim();
+
+/*
+=========================================
+PEGAR DÍGITO AUTOMÁTICO DO RA
+=========================================
+*/
+
+if(!digito && raBase.length > 1){
+
+    digito =
+        raBase.slice(-1);
+
+    raBase =
+        raBase.slice(0, -1);
+
+}
+
+const ra =
+    `${raBase}${digito}${uf}`;
+
+const senha =
+    senhaInput.value.trim();
+
+if(!raBase || !digito || !senha){
+
+    errorMessage.style.display =
+        "block";
+
+    errorMessage.textContent =
+        "Preencha todos os campos.";
+
+    return;
+
     }  
   
     loading.style.display = "block";  

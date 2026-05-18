@@ -867,34 +867,7 @@ async function verificarDesempenho(index){
         =========================================
         */
 
-        const faltasResponse =
-            await fetch(
-
-                `https://sedintegracoes.educacao.sp.gov.br/saladofuturobffapi/apiboletim/api/Frequencia/GetFaltasBimestreAtual?codigoAluno=${aluno.codigoAluno}`,
-
-                {
-                    headers:{
-                        "Accept":"application/json, text/plain, */*",
-                        Authorization:
-                        `Bearer ${aluno.sedToken}`,
-                        "Ocp-Apim-Subscription-Key":
-                            "d701a2043aa24d7ebb37e9adf60d043b"
-                    }
-                }
-
-            );
-
-        const faltasData =
-            await faltasResponse.json();
-
-        const frequencia =
-            faltasData?.data?.[0]
-            ?.porcentagemFrequencia || 0;
-
-        const faltas =
-            faltasData?.data?.[0]
-            ?.totalFaltasBimestre || 0;
-
+        
         /*
         =========================================
         UI

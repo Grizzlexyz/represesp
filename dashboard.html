@@ -867,7 +867,9 @@ async function verificarDesempenho(index){
         =========================================
         */
 
-        
+        const frequencia = "N/A";
+        const faltas = "N/A";
+      
         /*
         =========================================
         UI
@@ -890,7 +892,7 @@ async function verificarDesempenho(index){
             );
 
         frequenciaEl.textContent =
-            `${frequencia}%`;
+    frequencia;
 
         document.getElementById(
     "faltas-info"

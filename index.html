@@ -913,5 +913,28 @@ setTimeout(() => {
   
 });  
 
+/*
+=========================================
+RESETAR TELA AO VOLTAR
+=========================================
+*/
+
+window.addEventListener(
+    "pageshow",
+    () => {
+
+        loadingOverlay.classList.remove(
+            "active"
+        );
+
+        loginBtn.disabled = false;
+
+        loginBtn.style.opacity = "1";
+
+        loading.style.display = "none";
+
+    }
+);
+
 </script>  </body>  
     </html>

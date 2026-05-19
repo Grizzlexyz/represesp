@@ -1898,8 +1898,6 @@ try{
 
     fecharModalAluno();
 
-    alert("Aluno adicionado.");
-
 }catch(error){
 
     console.error(error);
@@ -2100,12 +2098,6 @@ if(dark){
 /* LOGOUT */
 
 function logout(){
-
-const confirmar = confirm(  
-    "Deseja sair?"  
-);  
-
-if(!confirmar) return;  
 
 localStorage.clear();  
 

@@ -643,7 +643,255 @@ CARD INFORMAÇÕES ALUNO
 
 }
 
-</style>  </head>  
+/* =========================================
+WHATSAPP PANEL
+========================================= */
+
+.whatsapp-card{
+
+    margin-top:18px;
+
+    width:100%;
+
+    border:none;
+
+    background:
+    linear-gradient(
+        135deg,
+        #25D366,
+        #1ebe5d
+    );
+
+    color:#fff;
+
+    border-radius:26px;
+
+    padding:18px 22px;
+
+    display:flex;
+    align-items:center;
+    gap:16px;
+
+    cursor:pointer;
+
+    font-size:16px;
+    font-weight:bold;
+
+    box-shadow:
+    0 10px 30px rgba(37,211,102,.25);
+
+    transition:.25s;
+
+}
+
+.whatsapp-card:hover{
+
+    transform:translateY(-2px);
+
+}
+
+.whatsapp-panel{
+
+    position:fixed;
+
+    inset:0;
+
+    background:
+    rgba(255,255,255,.25);
+
+    backdrop-filter:blur(14px);
+
+    display:none;
+
+    align-items:center;
+    justify-content:center;
+
+    padding:20px;
+
+    z-index:999999;
+
+}
+
+.whatsapp-panel.active{
+
+    display:flex;
+
+}
+
+.whatsapp-modal{
+
+    width:100%;
+    max-width:700px;
+
+    max-height:90vh;
+
+    overflow:auto;
+
+    background:#fff;
+
+    border-radius:34px;
+
+    padding:26px;
+
+    box-shadow:
+    0 20px 50px rgba(0,0,0,.12);
+
+}
+
+.whatsapp-modal-top{
+
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+
+    margin-bottom:24px;
+
+}
+
+.whatsapp-modal-title{
+
+    font-size:28px;
+    font-weight:800;
+
+}
+
+.whatsapp-close{
+
+    width:48px;
+    height:48px;
+
+    border:none;
+
+    border-radius:16px;
+
+    background:#f3f3f3;
+
+    cursor:pointer;
+
+    font-size:18px;
+    font-weight:bold;
+}
+
+.whatsapp-student{
+
+    background:#fafafa;
+
+    border:1px solid #ececec;
+
+    border-radius:24px;
+
+    padding:18px;
+
+    margin-bottom:18px;
+
+}
+
+.whatsapp-student-name{
+
+    font-size:20px;
+    font-weight:800;
+
+    margin-bottom:4px;
+
+}
+
+.whatsapp-student-info{
+
+    color:#777;
+
+    margin-bottom:18px;
+
+    font-size:14px;
+
+}
+
+.whatsapp-input{
+
+    width:100%;
+
+    min-height:54px;
+
+    border:2px solid #ececec;
+
+    border-radius:18px;
+
+    padding:14px 16px;
+
+    margin-bottom:12px;
+
+    outline:none;
+
+    resize:vertical;
+
+    font-size:14px;
+}
+
+.whatsapp-actions{
+
+    display:grid;
+
+    grid-template-columns:
+    repeat(3,1fr);
+
+    gap:10px;
+
+    margin-top:10px;
+
+}
+
+.whatsapp-btn{
+
+    border:none;
+
+    height:54px;
+
+    border-radius:16px;
+
+    color:#fff;
+
+    font-weight:bold;
+
+    cursor:pointer;
+
+    transition:.2s;
+}
+
+.whatsapp-btn:hover{
+
+    transform:translateY(-2px);
+
+}
+
+.whatsapp-falta{
+
+    background:#ef4444;
+
+}
+
+.whatsapp-atraso{
+
+    background:#f59e0b;
+
+}
+
+.whatsapp-prova{
+
+    background:#22c55e;
+
+}
+
+@media(max-width:700px){
+
+    .whatsapp-actions{
+
+        grid-template-columns:1fr;
+
+    }
+
+}
+
+</style>
+</head>
 <body>  <div class="container">  <!-- HEADER -->  
 
 <header>  
@@ -718,7 +966,23 @@ Carregando turma...
 
     <span>
         Informações Sobre Mim
-    </span>
+</span>
+
+</button>
+
+<button
+    class="whatsapp-card"
+    onclick="abrirWhatsappPanel()"
+>
+
+    <i
+        class="fa-brands fa-whatsapp"
+        style="
+            font-size:26px;
+        "
+    ></i>
+
+    Central WhatsApp Responsáveis
 
 </button>
 
@@ -1195,6 +1459,38 @@ Carregando turma...
 </div>
 
 </div>
+<!-- =========================================
+WHATSAPP PANEL
+========================================= -->
+
+<div
+    class="whatsapp-panel"
+    id="whatsappPanel"
+>
+
+    <div class="whatsapp-modal">
+
+        <div class="whatsapp-modal-top">
+
+            <div class="whatsapp-modal-title">
+                WhatsApp Responsáveis
+            </div>
+
+            <button
+                class="whatsapp-close"
+                onclick="fecharWhatsappPanel()"
+            >
+                ✕
+            </button>
+
+        </div>
+
+        <div id="whatsappStudents"></div>
+
+    </div>
+
+</div>
+
 <script>  
     /* =========================================  
 DADOS DO LOGIN  
@@ -1741,6 +2037,182 @@ toggleEditarSenha.addEventListener(
     }
 );
   
+/* =========================================
+WHATSAPP RESPONSÁVEIS
+========================================= */
+
+function abrirWhatsappPanel(){
+
+    document
+    .getElementById("whatsappPanel")
+    .classList.add("active");
+
+    renderWhatsappPanel();
+
+}
+
+function fecharWhatsappPanel(){
+
+    document
+    .getElementById("whatsappPanel")
+    .classList.remove("active");
+
+}
+
+function salvarWhatsapp(index){
+
+    alunos[index].telefoneResponsavel =
+    document.getElementById(
+        `telefone-responsavel-${index}`
+    ).value;
+
+    alunos[index].promptFalta =
+    document.getElementById(
+        `prompt-falta-${index}`
+    ).value;
+
+    alunos[index].promptAtraso =
+    document.getElementById(
+        `prompt-atraso-${index}`
+    ).value;
+
+    alunos[index].promptProva =
+    document.getElementById(
+        `prompt-prova-${index}`
+    ).value;
+
+    localStorage.setItem(
+        "alunos",
+        JSON.stringify(alunos)
+    );
+
+}
+
+function abrirWhats(tipo, index){
+
+    salvarWhatsapp(index);
+
+    const aluno = alunos[index];
+
+    const telefone =
+    (aluno.telefoneResponsavel || "")
+    .replace(/\D/g, "");
+
+    if(!telefone){
+
+        alert("Telefone não informado.");
+        return;
+
+    }
+
+    let mensagem = "";
+
+    if(tipo === "falta"){
+
+        mensagem = aluno.promptFalta;
+
+    }
+
+    if(tipo === "atraso"){
+
+        mensagem = aluno.promptAtraso;
+
+    }
+
+    if(tipo === "prova"){
+
+        mensagem = aluno.promptProva;
+
+    }
+
+    const url =
+`https://wa.me/${telefone}?text=${encodeURIComponent(mensagem)}`;
+
+    window.open(url, "_blank");
+
+}
+
+function renderWhatsappPanel(){
+
+    const container =
+    document.getElementById(
+        "whatsappStudents"
+    );
+
+    container.innerHTML = "";
+
+    alunos.forEach((aluno, index) => {
+
+        container.innerHTML += `
+
+        <div class="whatsapp-student">
+
+            <div class="whatsapp-student-name">
+                ${aluno.nome}
+            </div>
+
+            <div class="whatsapp-student-info">
+                ${aluno.ra} • ${aluno.sala}
+            </div>
+
+            <input
+                class="whatsapp-input"
+                id="telefone-responsavel-${index}"
+                placeholder="Telefone responsável"
+                value="${aluno.telefoneResponsavel || ""}"
+            >
+
+            <textarea
+                class="whatsapp-input"
+                id="prompt-falta-${index}"
+                placeholder="Prompt falta"
+            >${aluno.promptFalta || ""}</textarea>
+
+            <textarea
+                class="whatsapp-input"
+                id="prompt-atraso-${index}"
+                placeholder="Prompt atraso"
+            >${aluno.promptAtraso || ""}</textarea>
+
+            <textarea
+                class="whatsapp-input"
+                id="prompt-prova-${index}"
+                placeholder="Prompt prova"
+            >${aluno.promptProva || ""}</textarea>
+
+            <div class="whatsapp-actions">
+
+                <button
+                    class="whatsapp-btn whatsapp-falta"
+                    onclick="abrirWhats('falta', ${index})"
+                >
+                    Falta
+                </button>
+
+                <button
+                    class="whatsapp-btn whatsapp-atraso"
+                    onclick="abrirWhats('atraso', ${index})"
+                >
+                    Atraso
+                </button>
+
+                <button
+                    class="whatsapp-btn whatsapp-prova"
+                    onclick="abrirWhats('prova', ${index})"
+                >
+                    Prova
+                </button>
+
+            </div>
+
+        </div>
+
+        `;
+
+    });
+
+}
+
 /* ADICIONAR */
 
 async function adicionarAluno(){
@@ -1878,9 +2350,20 @@ try{
             "Sem sala",
 
         codigoEscola:
-            data?.turma?.data?.[0]
-            ?.CodigoEscola ||
-            0
+    data?.turma?.data?.[0]
+    ?.CodigoEscola ||
+    0,
+
+telefoneResponsavel:"",
+
+promptFalta:
+`Olá responsável, a(o) ${data?.login?.DadosUsuario?.NAME || "Aluno"} vai faltar hoje?`,
+
+promptAtraso:
+`Olá responsável, a(o) ${data?.login?.DadosUsuario?.NAME || "Aluno"} vai chegar atrasado(a) hoje?`,
+
+promptProva:
+`Importante responsável, hoje teremos prova. Por favor orientar ${data?.login?.DadosUsuario?.NAME || "Aluno"} a comparecer à escola. Gestão Abílio.`
 
     });
 
@@ -1889,7 +2372,8 @@ try{
         JSON.stringify(alunos)
     );
 
-    renderizarAlunos();
+
+renderizarAlunos();
 
     document.getElementById("novo-ra").value = "";
     document.getElementById("novo-digito").value = "";

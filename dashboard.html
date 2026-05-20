@@ -2014,20 +2014,36 @@ renderizarAlunos();
 
 function exportarDados(){
 
-const blob = new Blob(  
-    [JSON.stringify(alunos, null, 4)],  
-    { type:"application/json" }  
-);  
+let conteudo = "";
 
-const url = URL.createObjectURL(blob);  
+alunos.forEach((aluno) => {
 
-const a = document.createElement("a");  
+    conteudo +=
+`${aluno.ra}, ${aluno.senha}\n`;
 
-a.href = url;  
-a.download = "alunos.json";  
+});
+
+const blob = new Blob(
+    [conteudo],
+    { type:"text/plain" }
+);
+
+const url =
+    URL.createObjectURL(blob);
+
+const a =
+    document.createElement("a");
+
+a.href = url;
+
+a.download = "alunos.txt";
+
 a.click();
 
+URL.revokeObjectURL(url);
+
 }
+
 
 /* IMPORTAR */
 

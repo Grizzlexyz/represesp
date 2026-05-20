@@ -2047,38 +2047,204 @@ URL.revokeObjectURL(url);
 
 /* IMPORTAR */
 
-function importarDados(event){
+async function importarDados(event){
 
-const arquivo = event.target.files[0];  
+    const arquivo = event.target.files[0];
 
-if(!arquivo) return;  
+    if(!arquivo) return;
 
-const leitor = new FileReader();  
+    const texto = await arquivo.text();
 
-leitor.onload = function(e){  
+    try{
 
-    try{  
+        const linhas = texto
+            .split(/\r?\n/)
+            .map(l => l.trim())
+            .filter(Boolean);
 
-        alunos = JSON.parse(e.target.result);  
+        let adicionados = 0;
 
-        localStorage.setItem(  
-            "alunos",  
-            JSON.stringify(alunos)  
-        );  
+        for(const linha of linhas){
 
-        renderizarAlunos();  
+            /*
+            FORMATO:
+            RA,SENHA
+            */
 
-        alert("Importado com sucesso.");  
+            const partes = linha
+                .split(",");
 
-    }catch{  
+            if(partes.length < 2) continue;
 
-        alert("Arquivo inválido.");  
+            const usuario =
+                partes[0].trim();
 
-    }  
+            const senha =
+                partes[1].trim();
 
-};  
+            if(!usuario || !senha) continue;
 
-leitor.readAsText(arquivo);
+            try{
+
+                /*
+                =========================================
+                LOGIN ALUNO
+                =========================================
+                */
+
+                const response = await fetch(
+                    "https://representa-api.onrender.com/loginAluno",
+                    {
+                        method:"POST",
+                        headers:{
+                            "Content-Type":"application/json",
+                            "Accept":"application/json"
+                        },
+                        body:JSON.stringify({
+                            user: usuario,
+                            senha: senha
+                        })
+                    }
+                );
+
+                const data = await response.json();
+
+                if(!response.ok){
+
+                    console.log(
+                        "Falhou:",
+                        usuario
+                    );
+
+                    continue;
+
+                }
+
+                /*
+                =========================================
+                TOKEN IPTV
+                =========================================
+                */
+
+                const iptvResponse = await fetch(
+                    "https://edusp-api.ip.tv/registration/edusp/token",
+                    {
+                        method:"POST",
+                        headers:{
+                            "Content-Type":"application/json",
+                            "Accept":"application/json",
+                            "x-api-realm":"edusp",
+                            "x-api-platform":"webclient"
+                        },
+                        body:JSON.stringify({
+                            token:
+                                data?.token ||
+                                data?.Token ||
+                                data?.login?.token ||
+                                data?.login?.Token
+                        })
+                    }
+                );
+
+                const iptvData =
+                    await iptvResponse.json();
+
+                /*
+                =========================================
+                EVITAR DUPLICADOS
+                =========================================
+                */
+
+                const existe = alunos.some(
+                    a => a.ra === usuario
+                );
+
+                if(existe) continue;
+
+                /*
+                =========================================
+                SALVAR
+                =========================================
+                */
+
+                alunos.push({
+
+                    nome:
+                        data?.login?.DadosUsuario?.NAME ||
+                        data?.DadosUsuario?.NAME ||
+                        "Aluno",
+
+                    ra: usuario,
+
+                    senha: senha,
+
+                    sedToken:
+                        data?.token ||
+                        data?.Token ||
+                        data?.login?.token ||
+                        data?.login?.Token ||
+                        "",
+
+                    iptvToken:
+                        iptvData?.auth_token || "",
+
+                    codigoAluno:
+                        data?.login?.DadosUsuario?.CD_USUARIO ||
+                        "",
+
+                    nick:
+                        iptvData?.nick ||
+                        usuario.toLowerCase(),
+
+                    sala:
+                        data?.turma?.data?.[0]
+                        ?.DescricaoTurma ||
+                        "Sem sala",
+
+                    codigoEscola:
+                        data?.turma?.data?.[0]
+                        ?.CodigoEscola ||
+                        0
+
+                });
+
+                adicionados++;
+
+            }catch(error){
+
+                console.log(
+                    "Erro no aluno:",
+                    usuario
+                );
+
+            }
+
+        }
+
+        localStorage.setItem(
+            "alunos",
+            JSON.stringify(alunos)
+        );
+
+        renderizarAlunos();
+
+        alert(
+            `${adicionados} aluno(s) importado(s).`
+        );
+
+    }catch(error){
+
+        console.error(error);
+
+        alert("Arquivo inválido.");
+
+    }
+
+    /*
+    RESET INPUT
+    */
+
+    event.target.value = "";
 
 }
 

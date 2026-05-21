@@ -1373,12 +1373,64 @@ Carregando turma...
             >
 
             <button
-                type="button"
-                class="toggle-password"
-                id="toggleNovaSenha"
-            >
-                Mostrar
-            </button>
+    type="button"
+    class="toggle-password"
+    id="toggleNovaSenha"
+>
+
+    <!-- OLHO ABERTO -->
+
+    <svg
+        id="eyeOpenNova"
+        xmlns="http://www.w3.org/2000/svg"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="1.8"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        width="22"
+        height="22"
+        style="display:block;"
+    >
+
+        <path d="M2 12s3.5-6 10-6 10 6 10 6-3.5 6-10 6-10-6-10-6Z"></path>
+
+        <circle
+            cx="12"
+            cy="12"
+            r="3"
+        ></circle>
+
+    </svg>
+
+    <!-- OLHO FECHADO -->
+
+    <svg
+        id="eyeClosedNova"
+        xmlns="http://www.w3.org/2000/svg"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="1.8"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        width="22"
+        height="22"
+        style="display:none;"
+    >
+
+        <path d="M3 3l18 18"></path>
+
+        <path d="M10.58 10.58a2 2 0 0 0 2.83 2.83"></path>
+
+        <path d="M9.88 5.09A10.94 10.94 0 0 1 12 5c6.5 0 10 7 10 7a13.16 13.16 0 0 1-4.08 5.11"></path>
+
+        <path d="M6.61 6.61A13.53 13.53 0 0 0 2 12s3.5 7 10 7a10.94 10.94 0 0 0 5.09-1.17"></path>
+
+    </svg>
+
+</button>
 
         </div>
 
@@ -2120,6 +2172,16 @@ document
 
 /* MOSTRAR / OCULTAR SENHA */
 
+const eyeOpenNova =
+    document.getElementById(
+        "eyeOpenNova"
+    );
+
+const eyeClosedNova =
+    document.getElementById(
+        "eyeClosedNova"
+    );
+
 toggleNovaSenha.addEventListener(
     "click",
     () => {
@@ -2131,22 +2193,27 @@ toggleNovaSenha.addEventListener(
 
             novaSenhaInput.type = "text";
 
-            toggleNovaSenha.textContent =
-                "Ocultar";
+            eyeOpenNova.style.display =
+                "none";
+
+            eyeClosedNova.style.display =
+                "block";
 
         }else{
 
             novaSenhaInput.type =
                 "password";
 
-            toggleNovaSenha.textContent =
-                "Mostrar";
+            eyeOpenNova.style.display =
+                "block";
+
+            eyeClosedNova.style.display =
+                "none";
 
         }
 
     }
 );
-
 const toggleEditarSenha =
     document.getElementById(
         "toggleEditarSenha"

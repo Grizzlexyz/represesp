@@ -1157,7 +1157,58 @@ Carregando turma...
     </div>  
 
     <div style="overflow-x: auto;">  
+<div
+    style="
+        display:flex;
+        justify-content:space-between;
+        align-items:center;
+        gap:12px;
+        margin:20px 0;
+        flex-wrap:wrap;
+    "
+>
 
+    <input
+        type="text"
+        id="pesquisaAluno"
+        placeholder="Pesquisar aluno..."
+        class="form-input"
+        style="
+            max-width:300px;
+            height:48px;
+        "
+        oninput="renderizarAlunos()"
+    >
+
+    <select
+        id="ordenarSelect"
+        class="form-select"
+        style="
+            width:180px;
+            height:48px;
+        "
+        onchange="renderizarAlunos()"
+    >
+
+        <option value="az">
+            Nome A-Z
+        </option>
+
+        <option value="za">
+            Nome Z-A
+        </option>
+
+        <option value="ra">
+            RA
+        </option>
+
+        <option value="sala">
+            Sala
+        </option>
+
+    </select>
+
+</div>
         <table>  
 
             <thead>  
@@ -1899,7 +1950,103 @@ function renderizarAlunos(){
 
     corpoTabela.innerHTML = "";
 
-    alunos.forEach((aluno, index) => {
+    let lista = [...alunos];
+
+    /*
+    =========================================
+    PESQUISA
+    =========================================
+    */
+
+    const pesquisa =
+        document
+        .getElementById("pesquisaAluno")
+        ?.value
+        ?.toLowerCase() || "";
+
+    if(pesquisa){
+
+        lista = lista.filter(aluno =>
+
+            (aluno.nome || "")
+            .toLowerCase()
+            .includes(pesquisa)
+
+            ||
+
+            (aluno.ra || "")
+            .toLowerCase()
+            .includes(pesquisa)
+
+            ||
+
+            (aluno.sala || "")
+            .toLowerCase()
+            .includes(pesquisa)
+
+        );
+
+    }
+
+    /*
+    =========================================
+    ORDENAÇÃO
+    =========================================
+    */
+
+    const ordenar =
+        document
+        .getElementById("ordenarSelect")
+        ?.value || "az";
+
+    if(ordenar === "az"){
+
+        lista.sort((a,b)=>
+            (a.nome || "")
+            .localeCompare(b.nome || "")
+        );
+
+    }
+
+    if(ordenar === "za"){
+
+        lista.sort((a,b)=>
+            (b.nome || "")
+            .localeCompare(a.nome || "")
+        );
+
+    }
+
+    if(ordenar === "ra"){
+
+        lista.sort((a,b)=>
+            (a.ra || "")
+            .localeCompare(b.ra || "")
+        );
+
+    }
+
+    if(ordenar === "sala"){
+
+        lista.sort((a,b)=>
+            (a.sala || "")
+            .localeCompare(b.sala || "")
+        );
+
+    }
+
+    /*
+    =========================================
+    RENDER
+    =========================================
+    */
+
+    lista.forEach((aluno) => {
+
+        const index =
+            alunos.findIndex(a =>
+                a.ra === aluno.ra
+            );
 
         corpoTabela.innerHTML += `
         

@@ -892,7 +892,227 @@ WHATSAPP PANEL
 
 </style>
 </head>
-<body>  <div class="container">  <!-- HEADER -->  
+<body>  
+  <!-- OVERLAY MANUTENÇÃO -->
+<div id="maintenance-overlay">
+    <div class="maintenance-bg"></div>
+
+    <div class="maintenance-card">
+        <div class="maintenance-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M14.7 6.3a4 4 0 0 0 3 6.7l-9.4 9.4a2 2 0 1 1-2.8-2.8l9.4-9.4a4 4 0 0 0 6.7-3"/>
+            </svg>
+        </div>
+
+        <h1>Manutenção</h1>
+
+        <p>
+            O sistema está temporariamente indisponível devido às recentes alterações
+            realizadas pela Secretaria da Educação e integração com o Sala do Futuro.
+            <br><br>
+            Algumas funcionalidades precisaram ser reestruturadas para manter estabilidade,
+            compatibilidade e segurança da plataforma.
+            <br><br>
+            O acesso será liberado novamente assim que as correções forem concluídas.
+        </p>
+
+        <div class="maintenance-status">
+            <span class="pulse"></span>
+            Sistema em manutenção
+        </div>
+    </div>
+</div>
+
+<style>
+/* RESET */
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+html,
+body{
+    width:100%;
+    height:100%;
+    overflow:hidden;
+    font-family:Arial, sans-serif;
+    background:#000;
+}
+
+/* OVERLAY */
+#maintenance-overlay{
+    position:fixed;
+    inset:0;
+    z-index:999999999;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    overflow:hidden;
+    background:#000;
+}
+
+/* FUNDO CUSTOM */
+.maintenance-bg{
+    position:absolute;
+    inset:0;
+    background:
+        radial-gradient(circle at top left, rgba(255,255,255,.08), transparent 25%),
+        radial-gradient(circle at bottom right, rgba(255,255,255,.05), transparent 30%),
+        linear-gradient(135deg,#050505,#0a0a0a,#000);
+    background-size:cover;
+    filter:blur(0px);
+}
+
+/* EFEITO GRID */
+.maintenance-bg::before{
+    content:"";
+    position:absolute;
+    inset:0;
+    background-image:
+        linear-gradient(rgba(255,255,255,.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,.03) 1px, transparent 1px);
+    background-size:35px 35px;
+    opacity:.4;
+}
+
+/* CARD */
+.maintenance-card{
+    position:relative;
+    width:min(92%, 520px);
+    padding:38px 30px;
+    border-radius:28px;
+    border:1px solid rgba(255,255,255,.12);
+    background:rgba(15,15,15,.72);
+    backdrop-filter:blur(18px);
+    -webkit-backdrop-filter:blur(18px);
+    box-shadow:
+        0 0 50px rgba(255,255,255,.05),
+        inset 0 0 0 1px rgba(255,255,255,.03);
+    text-align:center;
+    animation:fadeUp .6s ease;
+}
+
+/* ÍCONE */
+.maintenance-icon{
+    width:74px;
+    height:74px;
+    margin:0 auto 22px;
+    border-radius:22px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    background:linear-gradient(
+        145deg,
+        rgba(255,255,255,.12),
+        rgba(255,255,255,.04)
+    );
+    border:1px solid rgba(255,255,255,.12);
+    box-shadow:0 0 30px rgba(255,255,255,.08);
+}
+
+/* TÍTULO */
+.maintenance-card h1{
+    color:#fff;
+    font-size:34px;
+    font-weight:700;
+    margin-bottom:18px;
+    letter-spacing:.5px;
+}
+
+/* TEXTO */
+.maintenance-card p{
+    color:rgba(255,255,255,.72);
+    font-size:15px;
+    line-height:1.7;
+}
+
+/* STATUS */
+.maintenance-status{
+    margin-top:28px;
+    width:100%;
+    height:52px;
+    border-radius:18px;
+    border:1px solid rgba(255,255,255,.08);
+    background:rgba(255,255,255,.03);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:12px;
+    color:#fff;
+    font-size:14px;
+    letter-spacing:.3px;
+}
+
+/* PULSE */
+.pulse{
+    width:10px;
+    height:10px;
+    border-radius:50%;
+    background:#fff;
+    animation:pulse 1.2s infinite;
+    box-shadow:0 0 10px #fff;
+}
+
+/* ANIMAÇÕES */
+@keyframes pulse{
+    0%{
+        transform:scale(1);
+        opacity:1;
+    }
+
+    50%{
+        transform:scale(1.6);
+        opacity:.5;
+    }
+
+    100%{
+        transform:scale(1);
+        opacity:1;
+    }
+}
+
+@keyframes fadeUp{
+    from{
+        opacity:0;
+        transform:translateY(20px);
+    }
+
+    to{
+        opacity:1;
+        transform:translateY(0);
+    }
+}
+
+/* RESPONSIVO */
+@media(max-width:600px){
+
+    .maintenance-card{
+        padding:30px 22px;
+        border-radius:24px;
+    }
+
+    .maintenance-card h1{
+        font-size:28px;
+    }
+
+    .maintenance-card p{
+        font-size:14px;
+    }
+
+    .maintenance-status{
+        height:48px;
+        font-size:13px;
+    }
+}
+
+/* REMOVE SELEÇÃO */
+*{
+    -webkit-tap-highlight-color:transparent;
+    user-select:none;
+}
+  </style>
+  <div class="container">  <!-- HEADER -->  
 
 <header>  
 
